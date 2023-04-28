@@ -44,7 +44,6 @@ function InterviewDetailsComponent({ interviewsDetialsProp, interviewTypesListPr
             location_link: Yup.string().required("Please enter Location Or Link."),
         }),
         onSubmit: (values, { resetForm }) => {
-            debugger
             if (values?.id) {
                 updateInterviewDetailsAction(values);
             }
@@ -54,6 +53,8 @@ function InterviewDetailsComponent({ interviewsDetialsProp, interviewTypesListPr
             resetForm();
         }
     });
+
+    console.log(interviewsDetialsProp);
     return (
         <>
             <NevbarComponent title={"Candidate Details"} breadcrumbPath={[{ link: 'candidate', value: "Candidate Details" }]} />
@@ -79,7 +80,7 @@ function InterviewDetailsComponent({ interviewsDetialsProp, interviewTypesListPr
                                             </label>
                                         </div>
                                         <div className="">
-                                            <Link className='btn btn-primary ' to={interviewsDetialsProp?.resume_id}> Resume </Link>
+                                            <a href={interviewsDetialsProp?.candidate[0]?.resume_id} className='btn btn-primary ' target='blanck'> Resume </a>
                                         </div>
                                     </div>
                                     <div className="">
@@ -160,7 +161,7 @@ function InterviewDetailsComponent({ interviewsDetialsProp, interviewTypesListPr
                                                                         }}
                                                                         onBlur={formikScheduleInterviewForm.handleBlur}>
                                                                         <option disabled selected='selected'>Select </option>
-                                                                        {interviewModeListProp?.map(mode => <option  key={mode.id} value={mode.id} selected={formikScheduleInterviewForm?.values?.interview_mode_id == mode.id ? true : false} >{mode.interview_mode} </option>
+                                                                        {interviewModeListProp?.map(mode => <option key={mode.id} value={mode.id} selected={formikScheduleInterviewForm?.values?.interview_mode_id == mode.id ? true : false} >{mode.interview_mode} </option>
 
                                                                         )}
                                                                     </select>
@@ -241,12 +242,12 @@ function InterviewDetailsComponent({ interviewsDetialsProp, interviewTypesListPr
                                                 <th>Remarks</th>
                                                 <th>Location Link</th>
                                                 <th>Points</th>
-                                                <th>Action</th>
+                                                {/* <th>Action</th> */}
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {interviewsDetialsProp?.interviews?.map(interview => {
-                                                return <tr  key={interview.id}>
+                                                return <tr key={interview.id}>
                                                     <td>{interview?.interview_type?.interview_type}</td>
                                                     <td>{interview?.date}</td>
                                                     <td>{interview?.interview_mode?.interview_mode}</td>
@@ -254,10 +255,10 @@ function InterviewDetailsComponent({ interviewsDetialsProp, interviewTypesListPr
                                                     <td>{interview?.remarks}</td>
                                                     <td>{interview?.location_link}</td>
                                                     <td>{interview?.total_rating}</td>
-                                                    <td><button className='btn btn-primary btn-sm' onClick={() => {
+                                                    {/* <td><button className='btn btn-primary btn-sm' onClick={() => {
                                                         formikScheduleInterviewForm.setValues(interview)
                                                         setScheduleInterview(interview)
-                                                    }}>Chnage</button> </td>
+                                                    }}>Chnage</button> </td> */}
                                                 </tr>
                                             })
 
@@ -286,7 +287,7 @@ function InterviewDetailsComponent({ interviewsDetialsProp, interviewTypesListPr
                                         </thead>
                                         <tbody>
                                             {interviewsDetialsProp?.skills?.map(skill => {
-                                                return <tr  key={skill.id}>
+                                                return <tr key={skill.id}>
                                                     <td>{skill.skill}</td>
                                                     <td>{skill.self_rating}</td>
                                                     <td>{skill.theory_rating}</td>

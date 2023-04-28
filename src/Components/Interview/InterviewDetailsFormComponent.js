@@ -16,6 +16,7 @@ function InterviewDetailsFormComponent({ candidateDetialsProp, sourceListProp, d
 
     const [skillDataModel, setSkillDataModel] = useState(false)
     const [previsCompaniesModel, setPrevisCompaniesModel] = useState(false)
+   
     const { id } = useParams()
     const navigate = useNavigate()
 
@@ -28,6 +29,7 @@ function InterviewDetailsFormComponent({ candidateDetialsProp, sourceListProp, d
         getAllModeOfWorkStatusAction();
         getAllDegreeAction();
     }, [])
+
 
     useEffect(() => {
         if (candidateDetialsProp) {
@@ -121,6 +123,7 @@ function InterviewDetailsFormComponent({ candidateDetialsProp, sourceListProp, d
             // self_rating: Yup.string().required("Please enter Self Rating."),
         }),
         onSubmit: (values, { resetForm }) => {
+        
             formikSkillForm.values.skill = skillListProp.find(skl => skl.id == values.skill_master_id).skill;
 
             formikForm.setFieldValue('skills', [...formikForm.values.skills, formikSkillForm.values]);

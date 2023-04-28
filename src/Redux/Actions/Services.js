@@ -16,7 +16,12 @@ const getByIdService = (endPoint, id) => {
 
 // post Service
 const postService = (endPoint, details) => {
-    return axios.post(Constants.BASEURL + endPoint, details)
+    console.log('endpoint', details);
+    return axios.post(Constants.BASEURL + endPoint, details, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    })
         .then(Response => Response.data).catch(error => { return error.response });
 }
 

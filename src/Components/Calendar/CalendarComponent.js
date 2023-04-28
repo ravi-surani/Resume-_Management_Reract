@@ -27,7 +27,7 @@ function CalendarComponent({ interviewsListProps, getAllInterviewAction }) {
 
                 let starttime = new Date(interview?.date);
 
-                let endtime = new Date();
+                let endtime = new Date(interview?.date);
                 endtime.setHours(starttime.getHours() + 1)
                 return {
                     candidateId: interview?.candidate?.id,

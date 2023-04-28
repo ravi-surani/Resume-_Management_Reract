@@ -19,6 +19,7 @@ function CandidateDetailsComponent({ candidateDetialsProp, getCandidateByIdActio
         }
     }, [])
 
+    console.log(candidateDetialsProp)
     return (
         <>
             <NevbarComponent title={"Candidate Details"} breadcrumbPath={[{ link: 'candidate', value: "Candidate Details" }]} />
@@ -44,7 +45,7 @@ function CandidateDetailsComponent({ candidateDetialsProp, getCandidateByIdActio
                                             </label>
                                         </div>
                                         <div className="">
-                                            <Link className='btn btn-primary ' to={candidateDetialsProp?.resume_id}> Resume </Link>
+                                            <a href={candidateDetialsProp?.resume_id} className='btn btn-primary ' target='blanck'> Resume </a>
                                         </div>
                                     </div>
                                     <div className="">

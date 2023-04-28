@@ -17,6 +17,8 @@ function CandidateDetailsComponent({ candidateDetialsProp, sourceListProp, degre
 
     const [skillDataModel, setSkillDataModel] = useState(false)
     const [previsCompaniesModel, setPrevisCompaniesModel] = useState(false)
+    const [skillList, setskillList] = useState(null);
+    const [file,setFile]=useState();
     const { id } = useParams()
     const navigate = useNavigate()
 
@@ -46,6 +48,7 @@ function CandidateDetailsComponent({ candidateDetialsProp, sourceListProp, degre
         source_id: null,
         status: true
     }
+
     useEffect(() => {
         getCandidateByIdAction(id || 0)
 
@@ -57,10 +60,15 @@ function CandidateDetailsComponent({ candidateDetialsProp, sourceListProp, degre
         getActiveDegreeAction();
     }, [])
 
+    useEffect(() => {
+        if (skillListProp) {
+            setskillList(skillListProp)
+        }
+    }, [skillListProp]
+    )
 
     useEffect(() => {
         if (candidateDetialsProp) {
-            // debugger
             formikForm.setValues(candidateDetialsProp)
         }
         else {
@@ -79,7 +87,7 @@ function CandidateDetailsComponent({ candidateDetialsProp, sourceListProp, degre
         validationSchema: Yup.object().shape({
             // skill: Yup.string().required("Please enter Skill."),
             name: Yup.string().required("Please enter Name."),
-            resume_id: Yup.string().required("Please upload RFesume."),
+            // resume_id: Yup.string().required("Please upload RFesume."),
             skills: Yup.array().min(1, "Please enter Skill."),
             email: Yup.string().required("Please enter Email Id."),
             contect_no: Yup.string()
@@ -103,13 +111,14 @@ function CandidateDetailsComponent({ candidateDetialsProp, sourceListProp, degre
             source_id: Yup.string().required("Please enter Source."),
         }),
         onSubmit: (values, { resetForm }) => {
-            // values.skills = values.skills.map(skill => skill.skill_master_id)
-            debugger
+            
+            // values.skills = values.skills.map(skill => skill.skill_master_id);
+            console.log('file',{...values,resume_id:file});
             if (values?.id) {
-                updateCandidateDetailsAction(values)
+                updateCandidateDetailsAction({...values,resume_id:file});
             }
             else {
-                addNewCandidateAction(values)
+                addNewCandidateAction({...values,resume_id:file});
             }
             resetForm();
             // navigate('/candidate');
@@ -130,9 +139,12 @@ function CandidateDetailsComponent({ candidateDetialsProp, sourceListProp, degre
             // self_rating: Yup.string().required("Please enter Self Rating."),
         }),
         onSubmit: (values, { resetForm }) => {
-            formikSkillForm.values.skill = skillListProp.find(skl => skl.id == values.skill_master_id).skill;
+            formikSkillForm.values.skill = skillList.find(skl => skl.id == values.skill_master_id).skill;
 
             formikForm.setFieldValue('skills', [...formikForm.values.skills, formikSkillForm.values]);
+
+            // skillList.splice(skillList.findIndex(skl => skl.id == values.skill_master_id), 1)
+            // setskillList(skillList)
 
             setSkillDataModel(false);
             resetForm();
@@ -169,6 +181,7 @@ function CandidateDetailsComponent({ candidateDetialsProp, sourceListProp, degre
     };
 
     const removeSkill = (skill) => {
+        console.log(skillList)
         let tempList = formikForm.values.skills
         tempList.splice(tempList.findIndex(skl => skl.skill_master_id == skill.skill_master_id), 1)
         formikForm.setFieldValue('skills', tempList)
@@ -180,6 +193,7 @@ function CandidateDetailsComponent({ candidateDetialsProp, sourceListProp, degre
         formikForm.setFieldValue('previs_companies', tempList)
     }
 
+    
     return (
         <>
             <NevbarComponent title={"Candidate Details"} breadcrumbPath={[{ link: 'candidate', value: "Candidate Details" }]} />
@@ -192,7 +206,7 @@ function CandidateDetailsComponent({ candidateDetialsProp, sourceListProp, degre
                     validateOnBlur={false}
                     onSubmit={values => { formikForm.handleSubmit(values) }}>
                     {props => (
-                        <form onSubmit={props.handleSubmit}>
+                        <form onSubmit={props.handleSubmit} enctype="multipart/form-data">
                             <div className="container-fluid px-5">
                                 <div className="content-header row">
                                     <h1 className="m-0 col-10 ">Candidate Details</h1>
@@ -205,7 +219,7 @@ function CandidateDetailsComponent({ candidateDetialsProp, sourceListProp, degre
                                             <div className="card-body">
                                                 <div className='d-flex justify-content-between '>
                                                     <div className="row p-1 w-75">
-                                                        <label htmlFor="name" className="font-weight-normal mt-2 h6">Name</label>
+                                                        <label htmlFor="name" className="font-weight-normal mt-2 h6">Name <span className='text-red'>* </span></label>
                                                         <input
                                                             id="name"
                                                             name="name"
@@ -220,14 +234,18 @@ function CandidateDetailsComponent({ candidateDetialsProp, sourceListProp, degre
                                                         ) : null}
                                                     </div>
                                                     <div className="">
-                                                        <label htmlFor="resume_id" className="font-weight-normal mt-2 h6">Resume</label>
+                                                        <label htmlFor="resume_id" className="font-weight-normal mt-2 h6">Resume<span className='text-red'>* </span></label>
                                                         <input
                                                             id="resume_id"
                                                             name="resume_id"
                                                             type="file"
                                                             accept="application/pdf, application/vnd.ms-excel"
                                                             className={"form-control p-1 "}
-                                                            onChange={formikForm.handleChange}
+                                                            onChange={(event) => {
+                                                                formikForm.setFieldValue('resume_id', event.target.files[0].name);
+                                                                setFile(event.target.files[0]);
+                                                            }}
+                                                            // onChange={formikForm.handleChange}
                                                             onBlur={formikForm.handleBlur}
                                                         // value={formikForm.values.resume_id}
                                                         />
@@ -241,7 +259,7 @@ function CandidateDetailsComponent({ candidateDetialsProp, sourceListProp, degre
                                                     <div className="">
                                                         <input
                                                             id="remarks"
-                                                            name="remarks"
+                                                            name="remarks"  
                                                             type="text"
                                                             className={"form-control "}
                                                             onChange={formikForm.handleChange}
@@ -300,7 +318,7 @@ function CandidateDetailsComponent({ candidateDetialsProp, sourceListProp, degre
                                                     <div className="card-body">
                                                         <div className="row">
                                                             <div className="col-6">
-                                                                <label htmlFor="email" className="font-weight-normal mt-2 h6">Email</label>
+                                                                <label htmlFor="email" className="font-weight-normal mt-2 h6">Email<span className='text-red'>* </span></label>
                                                                 <div className="">
                                                                     <input
                                                                         id="email"
@@ -317,7 +335,7 @@ function CandidateDetailsComponent({ candidateDetialsProp, sourceListProp, degre
                                                                 </div>
                                                             </div>
                                                             <div className="col-6">
-                                                                <label htmlFor="contect_no" className="font-weight-normal mt-2 h6">Contact No</label>
+                                                                <label htmlFor="contect_no" className="font-weight-normal mt-2 h6">Contact No<span className='text-red'>* </span></label>
                                                                 <div className="">
                                                                     <input
                                                                         id="contect_no"
@@ -434,142 +452,142 @@ function CandidateDetailsComponent({ candidateDetialsProp, sourceListProp, degre
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className='col-6 row'>
-                                                <div className='col-6'>
-                                                    <div className="card">
-                                                        <div className='card-header bg-secondary'>Education Details</div>
-                                                        <div className="card-body row">
-                                                            <div className="col-12 form-group row">
-                                                                <select
-                                                                    id="degree_id"
-                                                                    className={"form-control " + ((formikForm?.errors?.degree_id) ? " border-danger " : "") + " "}
-                                                                    name='degree_id'
-                                                                    onChange={selectedOption => {
-                                                                        formikForm.setFieldValue('degree_id', selectedOption?.target?.value)
-                                                                    }}
-                                                                    onBlur={formikForm.handleBlur}>
-                                                                    <option disabled selected='selected'>Select </option>
-                                                                    {degreeListProp?.map(degree =>
-                                                                        <option value={degree.id} selected={formikForm?.values?.degree_id == degree.id ? true : false} >{degree.degree} </option>
-                                                                    )}
-                                                                </select>
-                                                                {formikForm.touched.degree_id && formikForm.errors.degree_id ? (
-                                                                    <span className="text-danger">{formikForm.errors.degree_id}</span>) : null}
-                                                            </div>
-                                                            <div className="col-6">
-                                                                <label htmlFor="passing_year" className="font-weight-normal mt-2 h6">Passing Year</label>
-                                                                <div className="">
-                                                                    <input
-                                                                        id="passing_year"
-                                                                        name="passing_year"
-                                                                        type="text"
-                                                                        className={"form-control "}
-                                                                        onChange={formikForm.handleChange}
-                                                                        onBlur={formikForm.handleBlur}
-                                                                        value={formikForm.values.passing_year}
-                                                                    />
-                                                                    {formikForm.touched.passing_year && formikForm.errors.passing_year ? (
-                                                                        <span className="text-danger small">{formikForm.errors.passing_year}</span>
-                                                                    ) : null}
-                                                                </div>
-                                                            </div>
-                                                            <div className="col-6">
-                                                                <label htmlFor="passing_grade" className="font-weight-normal mt-2 h6">Passing Grade</label>
-                                                                <div className="">
-                                                                    <input
-                                                                        id="passing_grade"
-                                                                        name="passing_grade"
-                                                                        type="number"
-                                                                        className={"form-control "}
-                                                                        onChange={formikForm.handleChange}
-                                                                        onBlur={formikForm.handleBlur}
-                                                                        value={formikForm.values.passing_grade}
-                                                                    />
-                                                                    {formikForm.touched.passing_grade && formikForm.errors.passing_grade ? (
-                                                                        <span className="text-danger small">{formikForm.errors.passing_grade}</span>
-                                                                    ) : null}
-                                                                </div>
+
+                                            <div className='col-3'>
+                                                <div className="card">
+                                                    <div className='card-header bg-secondary'>Education Details</div>
+                                                    <div className="card-body row">
+                                                        <div className="col-12 form-group row">
+                                                            <select
+                                                                id="degree_id"
+                                                                className={"form-control " + ((formikForm?.errors?.degree_id) ? " border-danger " : "") + " "}
+                                                                name='degree_id'
+                                                                onChange={selectedOption => {
+                                                                    formikForm.setFieldValue('degree_id', selectedOption?.target?.value)
+                                                                }}
+                                                                onBlur={formikForm.handleBlur}>
+                                                                <option disabled selected='selected'>Select </option>
+                                                                {degreeListProp?.map(degree =>
+                                                                    <option value={degree.id} selected={formikForm?.values?.degree_id == degree.id ? true : false} >{degree.degree} </option>
+                                                                )}
+                                                            </select>
+                                                            {formikForm.touched.degree_id && formikForm.errors.degree_id ? (
+                                                                <span className="text-danger">{formikForm.errors.degree_id}</span>) : null}
+                                                        </div>
+                                                        <div className="col-6">
+                                                            <label htmlFor="passing_year" className="font-weight-normal mt-2 h6">Passing Year</label>
+                                                            <div className="">
+                                                                <input
+                                                                    id="passing_year"
+                                                                    name="passing_year"
+                                                                    type="text"
+                                                                    className={"form-control "}
+                                                                    onChange={formikForm.handleChange}
+                                                                    onBlur={formikForm.handleBlur}
+                                                                    value={formikForm.values.passing_year}
+                                                                />
+                                                                {formikForm.touched.passing_year && formikForm.errors.passing_year ? (
+                                                                    <span className="text-danger small">{formikForm.errors.passing_year}</span>
+                                                                ) : null}
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                <div className='col-6'>
-                                                    <div className="card">
-                                                        <div className='card-header bg-secondary'>Salary</div>
-                                                        <div className="card-body row">
-                                                            <div className="col-6">
-                                                                <label htmlFor="current_salary" className="font-weight-normal h6">Current Salary</label>
-                                                                <div className="">
-                                                                    <input
-                                                                        id="current_salary"
-                                                                        name="current_salary"
-                                                                        type="text"
-                                                                        className={"form-control "}
-                                                                        onChange={formikForm.handleChange}
-                                                                        onBlur={formikForm.handleBlur}
-                                                                        value={formikForm.values.current_salary}
-                                                                    />
-                                                                    {formikForm.touched.current_salary && formikForm.errors.current_salary ? (
-                                                                        <span className="text-danger small">{formikForm.errors.current_salary}</span>
-                                                                    ) : null}
-                                                                </div>
-                                                            </div>
-                                                            <div className="col-6">
-                                                                <label htmlFor="expected_salary" className="font-weight-normal h6">Expected Salary</label>
-                                                                <div className="">
-                                                                    <input
-                                                                        id="expected_salary"
-                                                                        name="expected_salary"
-                                                                        type="text"
-                                                                        className={"form-control "}
-                                                                        onChange={formikForm.handleChange}
-                                                                        onBlur={formikForm.handleBlur}
-                                                                        value={formikForm.values.expected_salary}
-                                                                    />
-                                                                    {formikForm.touched.expected_salary && formikForm.errors.expected_salary ? (
-                                                                        <span className="text-danger small">{formikForm.errors.expected_salary}</span>
-                                                                    ) : null}
-                                                                </div>
-                                                            </div>
-                                                            <div className="col-6">
-                                                                <label htmlFor="total_experience" className="font-weight-normal mt-2 h6">Total Experience (Years)</label>
-                                                                <div className="">
-                                                                    <input
-                                                                        id="total_experience"
-                                                                        name="total_experience"
-                                                                        type="number"
-                                                                        step=".01"
-                                                                        className={"form-control "}
-                                                                        onChange={formikForm.handleChange}
-                                                                        onBlur={formikForm.handleBlur}
-                                                                        value={formikForm.values.total_experience}
-                                                                    />
-                                                                    {formikForm.touched.total_experience && formikForm.errors.total_experience ? (
-                                                                        <span className="text-danger small">{formikForm.errors.total_experience}</span>
-                                                                    ) : null}
-                                                                </div>
-                                                            </div>
-                                                            <div className="col-6">
-                                                                <label htmlFor="notice_period" className="font-weight-normal mt-2 h6">Notice Period (Months)</label>
-                                                                <div className="">
-                                                                    <input
-                                                                        id="notice_period"
-                                                                        name="notice_period"
-                                                                        type="number"
-                                                                        className={"form-control "}
-                                                                        onChange={formikForm.handleChange}
-                                                                        onBlur={formikForm.handleBlur}
-                                                                        value={formikForm.values.notice_period}
-                                                                    />
-                                                                    {formikForm.touched.notice_period && formikForm.errors.notice_period ? (
-                                                                        <span className="text-danger small">{formikForm.errors.notice_period}</span>
-                                                                    ) : null}
-                                                                </div>
+                                                        <div className="col-6">
+                                                            <label htmlFor="passing_grade" className="font-weight-normal mt-2 h6">Passing Grade</label>
+                                                            <div className="">
+                                                                <input
+                                                                    id="passing_grade"
+                                                                    name="passing_grade"
+                                                                    type="number"
+                                                                    className={"form-control "}
+                                                                    onChange={formikForm.handleChange}
+                                                                    onBlur={formikForm.handleBlur}
+                                                                    value={formikForm.values.passing_grade}
+                                                                />
+                                                                {formikForm.touched.passing_grade && formikForm.errors.passing_grade ? (
+                                                                    <span className="text-danger small">{formikForm.errors.passing_grade}</span>
+                                                                ) : null}
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div className='col-3'>
+                                                <div className="card">
+                                                    <div className='card-header bg-secondary'>Salary</div>
+                                                    <div className="card-body row">
+                                                        <div className="col-6">
+                                                            <label htmlFor="current_salary" className="font-weight-normal h6">Current Salary</label>
+                                                            <div className="">
+                                                                <input
+                                                                    id="current_salary"
+                                                                    name="current_salary"
+                                                                    type="text"
+                                                                    className={"form-control "}
+                                                                    onChange={formikForm.handleChange}
+                                                                    onBlur={formikForm.handleBlur}
+                                                                    value={formikForm.values.current_salary}
+                                                                />
+                                                                {formikForm.touched.current_salary && formikForm.errors.current_salary ? (
+                                                                    <span className="text-danger small">{formikForm.errors.current_salary}</span>
+                                                                ) : null}
+                                                            </div>
+                                                        </div>
+                                                        <div className="col-6">
+                                                            <label htmlFor="expected_salary" className="font-weight-normal h6">Expected Salary</label>
+                                                            <div className="">
+                                                                <input
+                                                                    id="expected_salary"
+                                                                    name="expected_salary"
+                                                                    type="text"
+                                                                    className={"form-control "}
+                                                                    onChange={formikForm.handleChange}
+                                                                    onBlur={formikForm.handleBlur}
+                                                                    value={formikForm.values.expected_salary}
+                                                                />
+                                                                {formikForm.touched.expected_salary && formikForm.errors.expected_salary ? (
+                                                                    <span className="text-danger small">{formikForm.errors.expected_salary}</span>
+                                                                ) : null}
+                                                            </div>
+                                                        </div>
+                                                        <div className="col-6">
+                                                            <label htmlFor="total_experience" className="font-weight-normal mt-2 h6">Total Experience (Years)</label>
+                                                            <div className="">
+                                                                <input
+                                                                    id="total_experience"
+                                                                    name="total_experience"
+                                                                    type="number"
+                                                                    step=".01"
+                                                                    className={"form-control "}
+                                                                    onChange={formikForm.handleChange}
+                                                                    onBlur={formikForm.handleBlur}
+                                                                    value={formikForm.values.total_experience}
+                                                                />
+                                                                {formikForm.touched.total_experience && formikForm.errors.total_experience ? (
+                                                                    <span className="text-danger small">{formikForm.errors.total_experience}</span>
+                                                                ) : null}
+                                                            </div>
+                                                        </div>
+                                                        <div className="col-6">
+                                                            <label htmlFor="notice_period" className="font-weight-normal mt-2 h6">Notice Period (Months)</label>
+                                                            <div className="">
+                                                                <input
+                                                                    id="notice_period"
+                                                                    name="notice_period"
+                                                                    type="number"
+                                                                    className={"form-control "}
+                                                                    onChange={formikForm.handleChange}
+                                                                    onBlur={formikForm.handleBlur}
+                                                                    value={formikForm.values.notice_period}
+                                                                />
+                                                                {formikForm.touched.notice_period && formikForm.errors.notice_period ? (
+                                                                    <span className="text-danger small">{formikForm.errors.notice_period}</span>
+                                                                ) : null}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                             <div className='col-3'>
                                                 <div className="card">
                                                     <div className='card-header bg-secondary'>Mode of Work</div>
@@ -693,7 +711,7 @@ function CandidateDetailsComponent({ candidateDetialsProp, sourceListProp, degre
                                                 onChange={formikSkillForm.handleChange}
                                                 onBlur={formikSkillForm.handleBlur}>
                                                 <option disabled selected='selected'>Select </option>
-                                                {skillListProp?.map(skill => <option value={skill.id} selected={formikSkillForm?.values?.skill_master_id == skill.id ? true : false} >{skill.skill} </option>)}
+                                                {skillList?.map(skill => <option value={skill.id} selected={formikSkillForm?.values?.skill_master_id == skill.id ? true : false} >{skill.skill} </option>)}
                                             </select>
                                             {formikSkillForm.touched.skill_master_id && formikSkillForm.errors.skill_master_id ? (
                                                 <span className="text-danger">{formikSkillForm.errors.skill_master_id}</span>) : null}
@@ -711,7 +729,7 @@ function CandidateDetailsComponent({ candidateDetialsProp, sourceListProp, degre
                                                 onBlur={formikSkillForm.handleBlur}
                                                 value={formikSkillForm.values.experience}
                                             />
-                                            {formikSkillForm.touched.experience && formikSkillForm.errors.experience ? (
+                                            {formikSkillForm.touched.experience || formikSkillForm.errors.experience ? (
                                                 <span className="text-danger">{formikSkillForm.errors.experience}</span>
                                             ) : null}
                                         </div>
@@ -728,7 +746,7 @@ function CandidateDetailsComponent({ candidateDetialsProp, sourceListProp, degre
                                                 onBlur={formikSkillForm.handleBlur}
                                                 value={formikSkillForm.values.self_rating}
                                             />
-                                            {formikSkillForm.touched.self_rating && formikSkillForm.errors.self_rating ? (
+                                            {formikSkillForm.touched.self_rating || formikSkillForm.errors.self_rating ? (
                                                 <span className="text-danger">{formikSkillForm.errors.self_rating}</span>
                                             ) : null}
                                         </div>
