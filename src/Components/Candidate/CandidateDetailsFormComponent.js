@@ -20,6 +20,7 @@ import {
 import SidebarComponent from "../SidebarComponent";
 import NevbarComponent from "../NevbarComponent";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { addCandidate } from "../../ReduxNew/Candidate/addCandidateAction";
 
 function CandidateDetailsComponent({
   candidateDetialsProp,
@@ -38,6 +39,7 @@ function CandidateDetailsComponent({
   getActiveDegreeAction,
   getActiveModeOfWorkStatusAction,
   getActiveRecruitmentStatusAction,
+  addCandidateDispatch,
 }) {
   const [skillDataModel, setSkillDataModel] = useState(false);
   const [previsCompaniesModel, setPrevisCompaniesModel] = useState(false);
@@ -75,7 +77,6 @@ function CandidateDetailsComponent({
 
   useEffect(() => {
     getCandidateByIdAction(id || 0);
-
     getActiveSourceAction();
     getActiveSkillAction();
     getActiveRecruitmentStatusAction();
@@ -106,38 +107,29 @@ function CandidateDetailsComponent({
   const formikForm = useFormik({
     initialValues: initialValues,
     validationSchema: Yup.object().shape({
-      // skill: Yup.string().required("Please enter Skill."),
-      name: Yup.string().required("Please enter Name."),
-      // resume_id: Yup.string().required("Please upload RFesume."),
-      skills: Yup.array().min(1, "Please enter Skill."),
-      email: Yup.string().required("Please enter Email Id."),
+      name: Yup.string().required("Name is required"),
+      skills: Yup.array().min(1, "Enter atleast one skill"),
+      email: Yup.string()
+      .email('Invalid email')
+      .required('Email is required'),
       contect_no: Yup.string()
-        .required("Please Enter Contact No.")
+        .required("Contact Number is required")
         .matches(/^[0-9]+$/, "Must be only digits")
         .min(10, "Min 10 digits")
         .max(12, "Max 12 digits"),
-      // address: Yup.string().required("Please enter Address."),
-      // city: Yup.string().required("Please enter City."),
-      // state: Yup.string().required("Please enter State."),
-      // countary: Yup.string().required("Please enter Country."),
-      // dob: Yup.string().required("Please enter Skill."),
-      mode_of_work_id: Yup.string().required("Please enter Skill."),
-      degree_id: Yup.string().required("Please enter Education."),
-      // passing_year: Yup.string().required("Please enter Passing Year."),
-      // passing_grade: Yup.string().required("Please enter Grade."),
-      total_experience: Yup.string().required("Please enter Total Experience."),
-      current_salary: Yup.string().required("Please enter Current Salary."),
-      expected_salary: Yup.string().required("Please enter Expected Salary."),
-      // recruitment_status_id: Yup.string().required("Please enter Recruitment Status."),
-      source_id: Yup.string().required("Please enter Source."),
+      mode_of_work_id: Yup.string().required("Mode of work is required"),
+      degree_id: Yup.string().required("Educaton is required"),
+      total_experience: Yup.string().required("Total Experience is required"),
+      current_salary: Yup.string().required("Current Salary is required"),
+      expected_salary: Yup.string().required("Expected Salary is required"),
+      source_id: Yup.string().required("Source is required"),
     }),
     onSubmit: (values, { resetForm }) => {
-      // values.skills = values.skills.map(skill => skill.skill_master_id);
-      console.log("file", { ...values, resume_id: file });
       if (values?.id) {
         updateCandidateDetailsAction({ ...values, resume_id: file });
       } else {
-        addNewCandidateAction({ ...values, resume_id: file });
+        // addNewCandidateAction({ ...values, resume_id: file });
+        addCandidateDispatch({ ...values, resume_id: file }, navigate);
       }
       resetForm();
       // navigate('/candidate');
@@ -153,9 +145,8 @@ function CandidateDetailsComponent({
       practical_rating: "",
     },
     validationSchema: Yup.object().shape({
-      skill_master_id: Yup.string().required("Please enter Skill."),
-      experience: Yup.string().required("Please enter Experience."),
-      // self_rating: Yup.string().required("Please enter Self Rating."),
+      skill_master_id: Yup.string().required("Skill is required"),
+      experience: Yup.string().required("Experience is required"),
     }),
     onSubmit: (values, { resetForm }) => {
       formikSkillForm.values.skill = skillList.find(
@@ -166,10 +157,6 @@ function CandidateDetailsComponent({
         ...formikForm.values.skills,
         formikSkillForm.values,
       ]);
-
-      // skillList.splice(skillList.findIndex(skl => skl.id == values.skill_master_id), 1)
-      // setskillList(skillList)
-
       setSkillDataModel(false);
       resetForm();
     },
@@ -182,8 +169,7 @@ function CandidateDetailsComponent({
       to: "",
     },
     validationSchema: Yup.object().shape({
-      coumpany_name: Yup.string().required("Please enter Compani Name."),
-      // from: Yup.string().required("Please enter Starting Date."),
+      coumpany_name: Yup.string().required("Company Name is required"),
     }),
     onSubmit: (values, { resetForm }) => {
       formikForm.setFieldValue("previs_companies", [
@@ -208,7 +194,6 @@ function CandidateDetailsComponent({
   };
 
   const removeSkill = (skill) => {
-    console.log(skillList);
     let tempList = formikForm.values.skills;
     tempList.splice(
       tempList.findIndex((skl) => skl.skill_master_id == skill.skill_master_id),
@@ -583,7 +568,7 @@ function CandidateDetailsComponent({
                                         <td>{coumpany.from}</td>
                                         <td>{coumpany.to}</td>
                                         <td>
-                                          {/* <button
+                                          <button
                                             type="button"
                                             className="btn btn-danger btn-sm "
                                             onClick={() =>
@@ -591,7 +576,7 @@ function CandidateDetailsComponent({
                                             }
                                           >
                                             Remove
-                                          </button> */}
+                                          </button>
                                         </td>
                                       </tr>
                                     );
@@ -1187,7 +1172,7 @@ function CandidateDetailsComponent({
                       htmlFor="coumpany_name"
                       className="col-sm-3 col-form-label"
                     >
-                      Companiey Name{" "}
+                      Company Name{" "}
                     </label>
                     <div className="col-sm-9">
                       <input
@@ -1316,6 +1301,7 @@ const mapDispatchtoProps = {
   getActiveModeOfWorkStatusAction: () => getActiveModeOfWorkStatus(),
   getActiveRecruitmentStatusAction: () => getActiveRecruitmentStatus(),
   addNewCandidateAction: (details) => addNewCandidate(details),
+  addCandidateDispatch: (details, callback) => addCandidate(details, callback),
   updateCandidateDetailsAction: (details) => updateCandidateDetails(details),
 };
 export default connect(

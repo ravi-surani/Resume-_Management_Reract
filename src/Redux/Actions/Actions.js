@@ -30,30 +30,6 @@ const userLogin = (details) => {
     );
   };
 };
-
-// ----------------------------------------------
-// const userLogin = (details) => {
-//   return Services.postService("login", details)
-//     .then((response) => {
-//       if (response.success) {
-//         localStorage.setItem("login_user", JSON.stringify(response.user));
-//         return { success: true, user: response.user };
-//       } else {
-//         localStorage.removeItem("login_user");
-//         const error = response.message || "Login failed";
-//         return { success: false, error: error };
-//       }
-//     })
-//     .catch((error) => {
-//       localStorage.removeItem("login_user");
-//       const errorMsg = error.message || "Login failed";
-//       return { success: false, error: errorMsg };
-//     });
-// };
-
-
-// ----------------------------------------------
-
 const getAllUsers = () => {
   return (Dispatch) => {
     Dispatch({ type: Constants.GET_ALL_USER_REQUEST });

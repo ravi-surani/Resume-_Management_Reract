@@ -1181,7 +1181,7 @@ function InterviewDetailsFormComponent({
                       htmlFor="coumpany_name"
                       className="col-sm-3 col-form-label"
                     >
-                      Companiey Name{" "}
+                      Company Name{" "}
                     </label>
                     <div className="col-sm-9">
                       <input
@@ -1209,7 +1209,7 @@ function InterviewDetailsFormComponent({
                   </div>
                   <div className="form-group row">
                     <label htmlFor="from" className="col-sm-3 col-form-label">
-                      Companiey Name{" "}
+                      Company Name{" "}
                     </label>
                     <div className="col-sm-9">
                       <input
@@ -1237,7 +1237,7 @@ function InterviewDetailsFormComponent({
                   </div>
                   <div className="form-group row">
                     <label htmlFor="to" className="col-sm-3 col-form-label">
-                      Companiey Name{" "}
+                      Company Name{" "}
                     </label>
                     <div className="col-sm-9">
                       <input

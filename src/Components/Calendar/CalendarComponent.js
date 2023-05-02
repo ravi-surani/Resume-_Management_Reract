@@ -49,8 +49,6 @@ function CalendarComponent({ interviewsListProps, getAllInterviewAction }) {
     };
 
     const localizer = momentLocalizer(moment)
-
-    console.log(tableData)
     return (
         <>
             <NevbarComponent title={"Calendar List"} breadcrumbPath={[{ link: '', value: "Calendar" }]} />

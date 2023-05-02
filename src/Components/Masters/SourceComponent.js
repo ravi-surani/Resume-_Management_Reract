@@ -37,7 +37,6 @@ function SourceComponent({
       bottom: "auto",
       padding: "0px",
       marginRight: "-50%",
-      // transform: 'translate(-50%, -120%)  ',
       width: "30%",
     },
   };
@@ -55,8 +54,7 @@ function SourceComponent({
       status: true,
     },
     validationSchema: Yup.object().shape({
-      source: Yup.string().required("Please enter Source."),
-      // status: Yup.string().required("Please status."),
+      source: Yup.string().required("Source is required"),
     }),
 
     onSubmit: (values, { resetForm }) => {

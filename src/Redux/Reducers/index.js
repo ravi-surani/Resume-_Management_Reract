@@ -1,4 +1,5 @@
 import { combineReducers } from "redux"
+import { loginReducer } from "../../ReduxNew/Auth/loginReducer.js";
 
 import { loginUserReducer, getAllUsers, createNewUserReducer, reomveUserReducer } from './LoginReducer.js';
 
@@ -16,8 +17,11 @@ import { getAllInterviewsReducer, getInterviewsByIdReducer, addInterviewsReducer
 
 
 export const MainReducer = combineReducers({
-    loginUserReducer, getAllUsers, createNewUserReducer, reomveUserReducer,
+    loginReducer,
 
+
+    
+    loginUserReducer, getAllUsers, createNewUserReducer, reomveUserReducer,
     getCandidatesReducer,
     getAllSourceReducer, getActiveSourceReducer, addSourceReducer, updateSourceReducer, removedSourceReducer,
     getAllSkillTypeReducer, addSkillTypeReducer, updateSkillTypeReducer, removedSkillTypeReducer,

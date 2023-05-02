@@ -1,46 +1,38 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom';
 
 
 import { userLogin } from '../../Redux/Actions/Actions';
 import { connect } from 'react-redux';
-import { Formik, useFormik, useFormikContext } from "formik";
+import { Formik, useFormik } from "formik";
 import * as Yup from "yup";
+import { loginAction } from '../../ReduxNew/Auth/loginAction';
+import { useState } from 'react';
+import { showToastMessageSuccess } from '../../helper';
 
-function LoginComponent({ userDetailsProps, userLoginAction }) {
+function LoginComponent({ userDetailsProps, dispatchLogin }) {
 
     const navigate = useNavigate();
-    const [loginError, setLoginError] = useState(null);
-
+    const [loading, setLoading] = useState(false);
+    
     const formikForm = useFormik({
         initialValues: {
             email: "",
             password: "",
         },
         validationSchema: Yup.object().shape({
-            email: Yup.string().required("Please enter Email."),
-            password: Yup.string().required("Please enter Password."),
+            email: Yup.string()
+            .email('Invalid email')
+            .required('Email is required'),
+            password: Yup.string().required("Password is required"),
         }),
 
-        onSubmit: (values, { resetForm }) => {
-            userLoginAction(values)
-            navigate('/');
+        onSubmit: async(values, { setStatus, setSubmitting }) => {
+            setLoading(true);
+            dispatchLogin(values, navigate);
         }
-        // onSubmit: (values, { resetForm }) => {
-        //     userLoginAction(values)
-        //       .then((response) => {
-        //         if (response.success) {
-        //           console.log("login Success")
-        //         } else {
-        //             console.log("logn failed")
-        //           setLoginError(response.error);
-        //         }
-        //       })
-        //       .catch((error) => {
-        //         console.error(error);
-        //       });
-        //   },
     });
+    
 
     useEffect(() => {
         if (!userDetailsProps && localStorage.getItem('login_user')?.length) {
@@ -48,13 +40,13 @@ function LoginComponent({ userDetailsProps, userLoginAction }) {
         }
     }, [])
 
+
     return (
         <div className='hold-transition login-page'>
             <div className="login-box">
                 <div className="login-logo">
                     <h5 > Resume Management</h5>
                 </div>
-
                 <div className="card">
                     <div className="card-body login-card-body">
                         <p className="login-box-msg">Sign in to start your session</p>
@@ -123,6 +115,7 @@ const mapStatetoProps = (state) => {
 }
 
 const mapDispatchtoProps = {
+    dispatchLogin: (details, callback) => loginAction(details, callback),
     userLoginAction: (details) => userLogin(details),
 }
 export default connect(mapStatetoProps, mapDispatchtoProps)(LoginComponent)
