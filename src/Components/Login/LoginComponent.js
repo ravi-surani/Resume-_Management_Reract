@@ -10,6 +10,8 @@ import * as Yup from "yup";
 function LoginComponent({ userDetailsProps, userLoginAction }) {
 
     const navigate = useNavigate();
+    const [loginError, setLoginError] = useState(null);
+
     const formikForm = useFormik({
         initialValues: {
             email: "",
@@ -18,18 +20,30 @@ function LoginComponent({ userDetailsProps, userLoginAction }) {
         validationSchema: Yup.object().shape({
             email: Yup.string().required("Please enter Email."),
             password: Yup.string().required("Please enter Password."),
-            // self_rating: Yup.string().required("Please enter Self Rating."),
         }),
+
         onSubmit: (values, { resetForm }) => {
             userLoginAction(values)
-
-            resetForm();
+            navigate('/');
         }
+        // onSubmit: (values, { resetForm }) => {
+        //     userLoginAction(values)
+        //       .then((response) => {
+        //         if (response.success) {
+        //           console.log("login Success")
+        //         } else {
+        //             console.log("logn failed")
+        //           setLoginError(response.error);
+        //         }
+        //       })
+        //       .catch((error) => {
+        //         console.error(error);
+        //       });
+        //   },
     });
 
     useEffect(() => {
         if (!userDetailsProps && localStorage.getItem('login_user')?.length) {
-        
             navigate('/');
         }
     }, [])

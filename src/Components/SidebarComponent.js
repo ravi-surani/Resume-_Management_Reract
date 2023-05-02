@@ -86,18 +86,20 @@ function SidebarComponent({ userDetailsProps, setUserLoginDetailsAction, userLog
                                     </li>
 
                                     <li className="nav-item">
+                                        <Link to={'/skilltypes'} className="nav-link text-left ">
+                                            <p>Skill Type </p>
+                                            {/* <span className="badge badge-info right">0</span> */}
+                                        </Link>
+                                    </li>
+
+                                    <li className="nav-item">
                                         <Link to={'/skills'} className="nav-link text-left ">
                                             <p>Skill </p>
                                             {/* <span className="badge badge-info right">0</span> */}
                                         </Link>
                                     </li>
 
-                                    <li className="nav-item">
-                                        <Link to={'/skilltypes'} className="nav-link text-left ">
-                                            <p>Skill Type </p>
-                                            {/* <span className="badge badge-info right">0</span> */}
-                                        </Link>
-                                    </li>
+                               
 
                                     <li className="nav-item">
                                         <Link to={'/recruitmentstatus'} className="nav-link text-left ">

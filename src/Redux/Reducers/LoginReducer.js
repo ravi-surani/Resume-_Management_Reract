@@ -6,13 +6,13 @@ import Constants from '../Constants'
 export const loginUserReducer = (state = {}, action) => {
     switch (action.type) {
         case Constants.USER_LOG_IN_REQUEST: {
-            return { ...state, Loading: true }
+            return { ...state, Loading: true, Error:'' }
         }
         case Constants.USER_LOG_IN_SUCESS: {
-            return { ...state, userDetails: action.data, Loading: false }
+            return { ...state, userDetails: action.data, Loading: false, Error:'' }
         }
         case Constants.USER_LOG_IN_FAILED: {
-            return { ...state, Error: '', Loading: false }
+            return { ...state, Error: action.data, Loading: false }
         }
         default:
             return { ...state }

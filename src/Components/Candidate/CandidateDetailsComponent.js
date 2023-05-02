@@ -121,7 +121,7 @@ function CandidateDetailsComponent({ candidateDetialsProp, getCandidateByIdActio
                                 <div className='col-6'>
                                     <div className="card">
                                         <div className='card-header bg-secondary'>
-                                            <h4 className='card-title col-10'>Previs Companies</h4>
+                                            <h4 className='card-title col-10'>Previous Companies</h4>
                                         </div>
                                         <div className="card-body">
                                             <table className='table'>
