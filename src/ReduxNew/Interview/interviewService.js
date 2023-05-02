@@ -1,10 +1,10 @@
 import axios from "axios";
-import { ADD_CANDIDATE } from "../../config";
+import { ADD_INTERVIEW } from "../../config";
 
-export const addCandidateService = async (formData) => {
+export const addInterviewService = async (formData) => {
     return axios({
       method: "post",
-      url: ADD_CANDIDATE,
+      url: ADD_INTERVIEW,
       data: formData,
       headers: { "Content-Type": "multipart/form-data" },
     });

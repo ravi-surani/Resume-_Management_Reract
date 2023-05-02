@@ -1,4 +1,4 @@
-import { ADD_CANDIDATE_FAILURE, ADD_CANDIDATE_REQUEST, ADD_CANDIDATE_SUCCESS, } from "../actionTypes"
+import { ADD_INTERVIEW_FAILURE, ADD_INTERVIEW_REQUEST, ADD_INTERVIEW_SUCCESS, } from "../actionTypes"
 
 const initialState = {
     loading : false,
@@ -6,20 +6,20 @@ const initialState = {
     error : ""
 }
 
-const addCandidateReducer = (state = initialState, action) => {
+const interviewReducer = (state = initialState, action) => {
     switch(action.type){
-        case ADD_CANDIDATE_REQUEST : return {
+        case ADD_INTERVIEW_REQUEST : return {
             ...state,
             loading : true,
             error: ""
         }
-        case ADD_CANDIDATE_SUCCESS : return {
+        case ADD_INTERVIEW_SUCCESS : return {
             ...state,
             loading : false,
             error : "",
             data : action.payload
         }
-        case ADD_CANDIDATE_FAILURE : return {
+        case ADD_INTERVIEW_FAILURE : return {
             ...state,
             loading : false,
             data : "",
@@ -29,4 +29,4 @@ const addCandidateReducer = (state = initialState, action) => {
     }
 }
 
-export {addCandidateReducer}
+export {interviewReducer}

@@ -14,7 +14,7 @@ import {
   getActiveModeOfWorkStatus,
   getActiveRecruitmentStatus,
   updateCandidateDetails,
-  addNewCandidate,
+  // addNewCandidate,
 } from "../../Redux/Actions/Actions";
 
 import SidebarComponent from "../SidebarComponent";
@@ -31,7 +31,7 @@ function CandidateDetailsComponent({
   recruitmentStatusListProps,
   newCandidateProps,
   updatedCandidateProps,
-  addNewCandidateAction,
+  // addNewCandidateAction,
   updateCandidateDetailsAction,
   getActiveSkillAction,
   getActiveSourceAction,
@@ -1300,7 +1300,7 @@ const mapDispatchtoProps = {
   getActiveDegreeAction: () => getActiveDegree(),
   getActiveModeOfWorkStatusAction: () => getActiveModeOfWorkStatus(),
   getActiveRecruitmentStatusAction: () => getActiveRecruitmentStatus(),
-  addNewCandidateAction: (details) => addNewCandidate(details),
+  // addNewCandidateAction: (details) => addNewCandidate(details),
   addCandidateDispatch: (details, callback) => addCandidate(details, callback),
   updateCandidateDetailsAction: (details) => updateCandidateDetails(details),
 };

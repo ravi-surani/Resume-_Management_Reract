@@ -1,5 +1,7 @@
 import { combineReducers } from "redux"
 import { loginReducer } from "../../ReduxNew/Auth/loginReducer.js";
+import { addCandidateReducer } from "../../ReduxNew/Candidate/addCandidateReducer.js";
+import { interviewReducer } from "../../ReduxNew/Interview/interviewReducer.js";
 
 import { loginUserReducer, getAllUsers, createNewUserReducer, reomveUserReducer } from './LoginReducer.js';
 
@@ -17,7 +19,7 @@ import { getAllInterviewsReducer, getInterviewsByIdReducer, addInterviewsReducer
 
 
 export const MainReducer = combineReducers({
-    loginReducer,
+    loginReducer, addCandidateReducer,interviewReducer,
 
 
     

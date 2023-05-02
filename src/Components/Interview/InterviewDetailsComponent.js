@@ -16,6 +16,7 @@ import {
 import SidebarComponent from "../SidebarComponent";
 import NevbarComponent from "../NevbarComponent";
 import { Link, useParams } from "react-router-dom";
+import { addInterviewAction } from "../../ReduxNew/Interview/interviewAction";
 
 function InterviewDetailsComponent({
   interviewsDetialsProp,
@@ -27,11 +28,14 @@ function InterviewDetailsComponent({
   getActiveInterviewTypeAction,
   getActiveInterviewerAction,
   getAllInterviewModeAction,
-  addNewInterviewAction,
+  // addNewInterviewAction,
+  addInterviewDispatch,
   updateInterviewDetailsAction,
 }) {
   const { id } = useParams();
   const [scheduleInterview, setScheduleInterview] = useState();
+  const [isLoading, setIsLoading] = useState(false);
+
 
   useEffect(() => {
     if (id) {
@@ -58,18 +62,43 @@ function InterviewDetailsComponent({
       date: Yup.string().required("Date is required"),
       location_link: Yup.string().required("Location or link is required"),
     }),
-    onSubmit: (values, { resetForm }) => {
-      if (values?.id) {
-        updateInterviewDetailsAction(values);
-      } else {
-        addNewInterviewAction({
-          ...values,
-          candidate_master_id: interviewsDetialsProp?.candidate[0]?.id,
-        });
+    // onSubmit: (values, { resetForm }) => {
+    //   if (values?.id) {
+    //     updateInterviewDetailsAction(values);
+    //   } else {
+    //     // addNewInterviewAction({
+    //     //   ...values,
+    //     //   candidate_master_id: interviewsDetialsProp?.candidate[0]?.id,
+    //     // });
+    //     addInterviewDispatch({
+    //       ...values,
+    //       candidate_master_id: interviewsDetialsProp?.candidate[0]?.id,
+    //     });
+    //   }
+    //   resetForm();
+    // },
+    onSubmit: async (values, { resetForm, setSubmitting }) => {
+      // setSubmitting(true);
+      setIsLoading(true);
+      try {
+        if (values?.id) {
+          await updateInterviewDetailsAction(values);
+        } else {
+          await addInterviewDispatch({
+            ...values,
+            candidate_master_id: interviewsDetialsProp?.candidate[0]?.id,
+          });
+        }
+        resetForm();
+      } catch (error) {
+        console.log(error)
+      } finally {
+        setIsLoading(false);
       }
-      resetForm();
-    },
+    }
+    
   });
+  console.log(isLoading, "loading state")
 
   return (
     <>
@@ -156,12 +185,25 @@ function InterviewDetailsComponent({
                               >
                                 Cancel
                               </button>
-                              <button
-                                type="submit"
-                                className="btn btn-primary col-1 btn-sm "
-                              >
-                                Save
+                              {!isLoading && 
+                                  <button
+                                  type="submit"
+                                  className="btn btn-primary col-1 btn-sm "
+                                >
+                                  Save
+                                </button>
+                              }
+                          
+                              {isLoading &&  
+                              <button className="btn btn-primary btn-sm" disabled={isLoading}>
+                                <span
+                                  class="spinner-border spinner-border-sm"
+                                  role="status"
+                                  aria-hidden="true"
+                                ></span>
+                                <span class="sr-only">Loading...</span>
                               </button>
+                              }
                             </div>
                             <div className="card-body">
                               <div className="row">
@@ -458,10 +500,6 @@ function InterviewDetailsComponent({
                             <td>{interview?.remarks}</td>
                             <td>{interview?.location_link}</td>
                             <td>{interview?.total_rating}</td>
-                            {/* <td><button className='btn btn-primary btn-sm' onClick={() => {
-                                                        formikScheduleInterviewForm.setValues(interview)
-                                                        setScheduleInterview(interview)
-                                                    }}>Chnage</button> </td> */}
                           </tr>
                         );
                       })}
@@ -525,6 +563,7 @@ const mapDispatchtoProps = {
   getActiveInterviewerAction: () => getActiveInterviewer(),
   getAllInterviewModeAction: () => getAllInterviewMode(),
   addNewInterviewAction: (details) => addNewInterview(details),
+  addInterviewDispatch: (details) => addInterviewAction(details),
   updateInterviewDetailsAction: (details) => updateInterviewDetails(details),
 };
 export default connect(

@@ -175,29 +175,29 @@ const getCandidateById = (id) => {
   };
 };
 
-const addNewCandidate = (details) => {
-  return (Dispatch) => {
-    Dispatch({ type: Constants.ADD_CANDIDATES_REQUEST });
-    Services.postService("candidatemaster", details).then(
-      (response) => {
-        if (response.success) {
-          return Dispatch({
-            type: Constants.ADD_CANDIDATES_SUCESS,
-            data: response.data,
-          });
-        } else {
-          return Dispatch({
-            type: Constants.ADD_CANDIDATES_FAILED,
-            data: response,
-          });
-        }
-      },
-      (error) => {
-        return Dispatch({ type: Constants.ADD_CANDIDATES_SUCESS, data: error });
-      }
-    );
-  };
-};
+// const addNewCandidate = (details) => {
+//   return (Dispatch) => {
+//     Dispatch({ type: Constants.ADD_CANDIDATES_REQUEST });
+//     Services.postService("candidatemaster", details).then(
+//       (response) => {
+//         if (response.success) {
+//           return Dispatch({
+//             type: Constants.ADD_CANDIDATES_SUCESS,
+//             data: response.data,
+//           });
+//         } else {
+//           return Dispatch({
+//             type: Constants.ADD_CANDIDATES_FAILED,
+//             data: response,
+//           });
+//         }
+//       },
+//       (error) => {
+//         return Dispatch({ type: Constants.ADD_CANDIDATES_SUCESS, data: error });
+//       }
+//     );
+//   };
+// };
 
 const updateCandidateDetails = (details) => {
   return (Dispatch) => {
@@ -1634,7 +1634,7 @@ export {
   // Candidates Master
   getAllCandidates,
   getCandidateById,
-  addNewCandidate,
+  // addNewCandidate,
   updateCandidateDetails,
   removeCandidate,
 
