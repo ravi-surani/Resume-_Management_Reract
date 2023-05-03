@@ -2,6 +2,9 @@ import { combineReducers } from "redux"
 import { loginReducer } from "../../ReduxNew/Auth/loginReducer.js";
 import { addCandidateReducer } from "../../ReduxNew/Candidate/addCandidateReducer.js";
 import { interviewReducer } from "../../ReduxNew/Interview/interviewReducer.js";
+import { viewCandidateReducer } from "../../ReduxNew/Candidate/viewCandidateReducer.js";
+import { viewInterviewReducer } from "../../ReduxNew/Interview/viewInterviewReducer.js";
+import { viewSourceReducer } from "../../ReduxNew/Masters/Source/viewSourceReducer.js";
 
 import { loginUserReducer, getAllUsers, createNewUserReducer, reomveUserReducer } from './LoginReducer.js';
 
@@ -19,7 +22,7 @@ import { getAllInterviewsReducer, getInterviewsByIdReducer, addInterviewsReducer
 
 
 export const MainReducer = combineReducers({
-    loginReducer, addCandidateReducer,interviewReducer,
+    loginReducer, addCandidateReducer,interviewReducer,viewCandidateReducer,viewInterviewReducer,viewSourceReducer,
 
 
     

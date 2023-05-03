@@ -1,32 +1,32 @@
 import React, { useEffect, useState } from "react";
-import ReactDOM from "react-dom";
 import { Calendar, momentLocalizer } from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import moment from 'moment'
 import NevbarComponent from "../NevbarComponent";
 import SidebarComponent from "../SidebarComponent";
 
-import { getAllInterview, } from '../../Redux/Actions/Actions';
 import { connect } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { viewInterview } from "../../ReduxNew/Interview/interviewAction";
 
 const localizer = momentLocalizer(moment)
 
-function CalendarComponent({ interviewsListProps, getAllInterviewAction }) {
+function CalendarComponent({ interviewsListProps, getAllInterviewAction, interviewsLoading, interviewsResponse, dispatchInterview }) {
 
     const navigate = useNavigate();
     const [tableData, setTableData] = useState([])
 
     useEffect(() => {
-        getAllInterviewAction();
+        // getAllInterviewAction();
+        dispatchInterview();
     }, [])
 
     useEffect(() => {
-        if (interviewsListProps) {
-            let tempList = interviewsListProps.map(interview => {
-
+        // if (interviewsListProps) {
+        if (!interviewsLoading && interviewsResponse) {
+            // let tempList = interviewsListProps.map(interview => {
+            let tempList = interviewsResponse.map(interview => {
                 let starttime = new Date(interview?.date);
-
                 let endtime = new Date(interview?.date);
                 endtime.setHours(starttime.getHours() + 1)
                 return {
@@ -41,14 +41,14 @@ function CalendarComponent({ interviewsListProps, getAllInterviewAction }) {
             })
             setTableData(tempList)
         }
-    }, [interviewsListProps])
-
+    // }, [interviewsListProps])
+    }, [interviewsLoading, interviewsResponse])
 
     const Custoemevent = (event) => {
         navigate('/interview/' + event.candidateId)
     };
-
     const localizer = momentLocalizer(moment)
+
     return (
         <>
             <NevbarComponent title={"Calendar List"} breadcrumbPath={[{ link: '', value: "Calendar" }]} />
@@ -80,11 +80,17 @@ function CalendarComponent({ interviewsListProps, getAllInterviewAction }) {
 
 const mapStatetoProps = (state) => {
     return {
-        interviewsListProps: state?.getAllInterviewsReducer?.InterviewsList,
+        // interviewsListProps: state?.getAllInterviewsReducer?.InterviewsList,
+
+        interviewsLoading: state.viewInterviewReducer.loading,
+        interviewsResponse: state.viewInterviewReducer.data.data,
+        interviewsError: state.viewInterviewReducer.error,
     }
 }
 
 const mapDispatchtoProps = {
-    getAllInterviewAction: () => getAllInterview(),
+    // getAllInterviewAction: () => getAllInterview(),
+    dispatchInterview: () => viewInterview(),
+
 }
 export default connect(mapStatetoProps, mapDispatchtoProps)(CalendarComponent)

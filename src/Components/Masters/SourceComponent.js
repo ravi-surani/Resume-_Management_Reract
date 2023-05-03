@@ -13,6 +13,7 @@ import {
   updateSourceDetails,
   removeSource,
 } from "../../Redux/Actions/Actions";
+import { viewSource } from "../../ReduxNew/Masters/Source/sourceAction";
 
 function SourceComponent({
   sourceListProp,
@@ -23,6 +24,10 @@ function SourceComponent({
   addNewSourceAction,
   updateSourceDetailsAction,
   removeSourceAction,
+  viewSourceDispatch,
+  sourceLoading,
+  sourceResponse
+
 }) {
   const searchRef = useRef("");
   const [sourceList, setSourceList] = useState(null);
@@ -69,12 +74,15 @@ function SourceComponent({
   });
 
   useEffect(() => {
-    getAllSourceAction();
+    // getAllSourceAction();
+    viewSourceDispatch();
   }, [newSourceAddedProp, sourceUpdatedProp, sourceRemovedProp]);
 
   useEffect(() => {
-    if (sourceListProp) {
-      let tempList = sourceListProp.map((source) => {
+    // if (sourceListProp) {
+    if (!sourceLoading && sourceResponse) {
+      // let tempList = sourceListProp.map((source) => {
+      let tempList = sourceResponse.map((source) => {
         return {
           id: source.id,
           source_name: source.source,
@@ -109,7 +117,8 @@ function SourceComponent({
       setSourceList(tempList);
       setTableData(tempList);
     }
-  }, [sourceListProp]);
+  // }, [sourceListProp]);
+  }, [sourceLoading, sourceResponse]);
 
   const onSourceRemove = (id) => {
     removeSourceAction(id);
@@ -185,7 +194,7 @@ function SourceComponent({
           </div>
           <div className="wrapper">
             <section className="content">
-              <DataTable columns={TableColumns} tableData={tableData} />
+              <DataTable columns={TableColumns} tableData={tableData} isLoading={sourceLoading}/>
             </section>
           </div>
         </div>
@@ -309,6 +318,11 @@ function SourceComponent({
 
 const mapStatetoProps = (state) => {
   return {
+    sourceLoading: state.viewSourceReducer.loading,
+    sourceResponse: state.viewSourceReducer.data.data,
+    sourceError: state.viewSourceReducer.error,
+
+
     sourceListProp: state.getAllSourceReducer?.sourceList,
     newSourceAddedProp: state.addSourceReducer?.newSourceAdded,
     sourceUpdatedProp: state.updateSourceReducer?.sourceUpdated,
@@ -316,6 +330,8 @@ const mapStatetoProps = (state) => {
   };
 };
 const mapDispatchtoProps = {
+  viewSourceDispatch: () => viewSource(),
+
   getAllSourceAction: () => getAllSource(),
   addNewSourceAction: (details) => addNewSource(details),
   updateSourceDetailsAction: (details) => updateSourceDetails(details),

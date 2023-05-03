@@ -1,7 +1,7 @@
 import { getInterviewById } from "../../Redux/Actions/Actions";
 import { showToastMessageFailure, showToastMessageSuccess } from "../../helper";
-import { ADD_INTERVIEW_FAILURE, ADD_INTERVIEW_REQUEST, ADD_INTERVIEW_SUCCESS } from "../actionTypes";
-import { addInterviewService } from "./interviewService";
+import { ADD_INTERVIEW_FAILURE, ADD_INTERVIEW_REQUEST, ADD_INTERVIEW_SUCCESS, VIEW_INTERVIEW_FAILURE, VIEW_INTERVIEW_REQUEST, VIEW_INTERVIEW_SUCCESS } from "../actionTypes";
+import { addInterviewService, viewInterviewService } from "./interviewService";
 
 
 const dataRequest = (type) => {
@@ -38,6 +38,17 @@ export const addInterviewAction = (formData, callback) => {
           dispatch(dataFailure(ADD_INTERVIEW_FAILURE, error.message));
           showToastMessageFailure();
         }
+      );
+    };
+  };
+
+  export const viewInterview = () => {
+    return async (dispatch) => {
+      dispatch(dataRequest(VIEW_INTERVIEW_REQUEST));
+  
+      await viewInterviewService().then(
+        (result) => dispatch(dataSuccess(VIEW_INTERVIEW_SUCCESS, result.data)),
+        (error) => dispatch(dataFailure(VIEW_INTERVIEW_FAILURE, error.message))
       );
     };
   };

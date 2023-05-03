@@ -121,32 +121,32 @@ const userLogout = () => {
 };
 
 // Candidates Master
-const getAllCandidates = () => {
-  return (Dispatch) => {
-    Dispatch({ type: Constants.GET_ALL_CANDIDATES_REQUEST });
-    Services.getService("candidatemaster").then(
-      (response) => {
-        if (response.success) {
-          return Dispatch({
-            type: Constants.GET_ALL_CANDIDATES_SUCESS,
-            data: response.data,
-          });
-        } else {
-          return Dispatch({
-            type: Constants.GET_ALL_CANDIDATES_FAILED,
-            data: response,
-          });
-        }
-      },
-      (error) => {
-        return Dispatch({
-          type: Constants.GET_ALL_CANDIDATES_FAILED,
-          data: error,
-        });
-      }
-    );
-  };
-};
+// const getAllCandidates = () => {
+//   return (Dispatch) => {
+//     Dispatch({ type: Constants.GET_ALL_CANDIDATES_REQUEST });
+//     Services.getService("candidatemaster").then(
+//       (response) => {
+//         if (response.success) {
+//           return Dispatch({
+//             type: Constants.GET_ALL_CANDIDATES_SUCESS,
+//             data: response.data,
+//           });
+//         } else {
+//           return Dispatch({
+//             type: Constants.GET_ALL_CANDIDATES_FAILED,
+//             data: response,
+//           });
+//         }
+//       },
+//       (error) => {
+//         return Dispatch({
+//           type: Constants.GET_ALL_CANDIDATES_FAILED,
+//           data: error,
+//         });
+//       }
+//     );
+//   };
+// };
 
 const getCandidateById = (id) => {
   return (Dispatch) => {
@@ -1490,32 +1490,32 @@ const removeDegreeStatus = (id) => {
 };
 
 // Degree
-const getAllInterview = () => {
-  return (Dispatch) => {
-    Dispatch({ type: Constants.GET_ALL_INTERVIEWS_REQUEST });
-    Services.getService("interviews").then(
-      (response) => {
-        if (response.success) {
-          return Dispatch({
-            type: Constants.GET_ALL_INTERVIEWS_SUCESS,
-            data: response.data,
-          });
-        } else {
-          return Dispatch({
-            type: Constants.GET_ALL_INTERVIEWS_FAILED,
-            data: response,
-          });
-        }
-      },
-      (error) => {
-        return Dispatch({
-          type: Constants.GET_ALL_INTERVIEWS_FAILED,
-          data: error,
-        });
-      }
-    );
-  };
-};
+// const getAllInterview = () => {
+//   return (Dispatch) => {
+//     Dispatch({ type: Constants.GET_ALL_INTERVIEWS_REQUEST });
+//     Services.getService("interviews").then(
+//       (response) => {
+//         if (response.success) {
+//           return Dispatch({
+//             type: Constants.GET_ALL_INTERVIEWS_SUCESS,
+//             data: response.data,
+//           });
+//         } else {
+//           return Dispatch({
+//             type: Constants.GET_ALL_INTERVIEWS_FAILED,
+//             data: response,
+//           });
+//         }
+//       },
+//       (error) => {
+//         return Dispatch({
+//           type: Constants.GET_ALL_INTERVIEWS_FAILED,
+//           data: error,
+//         });
+//       }
+//     );
+//   };
+// };
 
 const getInterviewById = (id) => {
   return (Dispatch) => {
@@ -1632,7 +1632,7 @@ export {
   removeUser,
 
   // Candidates Master
-  getAllCandidates,
+  // getAllCandidates,
   getCandidateById,
   // addNewCandidate,
   updateCandidateDetails,
@@ -1703,7 +1703,7 @@ export {
   removeDegreeStatus,
 
   // Interview
-  getAllInterview,
+  // getAllInterview,
   getInterviewById,
   addNewInterview,
   updateInterviewDetails,

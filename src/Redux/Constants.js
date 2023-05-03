@@ -1,6 +1,7 @@
 const Constants = {
 
     BASEURL: 'recruitment.api.weybee.in',
+    // BASEURL: 'http://127.0.0.1:8000/api/',
 
 
     USER_LOG_IN_REQUEST: 'USER_LOG_IN_REQUEST',

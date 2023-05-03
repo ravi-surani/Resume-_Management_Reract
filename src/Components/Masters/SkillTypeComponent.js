@@ -145,7 +145,7 @@ function SkillTypeComponent({
     <>
       <NevbarComponent
         title={"Skill Types List"}
-        breadcrumbPath={[{ link: "skilltypes", value: "Skill Types List" }]}
+        breadcrumbPath={[{ link: "skilltypes", value: "Skill Types List"}]}
       />
       <SidebarComponent />
       <div className="content-wrapper">
@@ -160,7 +160,7 @@ function SkillTypeComponent({
                     className="form-control"
                     name="search"
                     ref={searchRef}
-                    placeholder="Search "
+                    placeholder="Search"
                     onChange={onSearchfilter}
                   />
                 </div>

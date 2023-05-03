@@ -1,5 +1,8 @@
-   const APP_API_URL = " recruitment.api.weybee.in"
+   // const APP_API_URL = "http://127.0.0.1:8000/api"
+   const APP_API_URL = "recruitment.api.weybee.in"
+
 
     export const LOGIN_API = `${APP_API_URL}/login`;
-    export const ADD_CANDIDATE = `${APP_API_URL}/candidatemaster`;
-    export const ADD_INTERVIEW = `${APP_API_URL}/interviews`;
+    export const CANDIDATE = `${APP_API_URL}/candidatemaster`;
+    export const INTERVIEW = `${APP_API_URL}/interviews`;
+    export const SOURCE = `${APP_API_URL}/sourcemaster`;

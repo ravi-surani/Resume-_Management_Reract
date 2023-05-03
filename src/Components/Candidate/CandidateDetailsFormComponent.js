@@ -20,7 +20,7 @@ import {
 import SidebarComponent from "../SidebarComponent";
 import NevbarComponent from "../NevbarComponent";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { addCandidate } from "../../ReduxNew/Candidate/addCandidateAction";
+import { addCandidate } from "../../ReduxNew/Candidate/candidateAction";
 
 function CandidateDetailsComponent({
   candidateDetialsProp,
@@ -1144,7 +1144,7 @@ function CandidateDetailsComponent({
           contentLabel="Example Modal"
         >
           <div className="modal-header">
-            <h4>Skill Details</h4>
+            <h4>Previous Company Details</h4>
             <button
               className="btn btn-danger btn-sm"
               onClick={() => {

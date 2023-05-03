@@ -75,33 +75,30 @@ function SidebarComponent({
               </li>
 
               <li className="nav-item">
-                <a href="#" className="nav-link">
-                  <p>
+                {/* <a href="#" className="nav-link"> */}
+                  <p className="nav-link" style={{cursor:"pointer"}}>
                     Masters
                     <span className="badge badge-info right">
                       &nbsp; 10 &nbsp;
                     </span>
                   </p>
-                </a>
+                {/* </a> */}
                 <ul className="nav nav-treeview">
                   <li className="nav-item">
                     <Link to={"/source"} className="nav-link text-left ">
                       <p>Source </p>
-                      {/* <span className="badge badge-info right">0</span> */}
                     </Link>
                   </li>
 
                   <li className="nav-item">
                     <Link to={"/skilltypes"} className="nav-link text-left ">
                       <p>Skill Type </p>
-                      {/* <span className="badge badge-info right">0</span> */}
                     </Link>
                   </li>
 
                   <li className="nav-item">
                     <Link to={"/skills"} className="nav-link text-left ">
                       <p>Skill </p>
-                      {/* <span className="badge badge-info right">0</span> */}
                     </Link>
                   </li>
 
@@ -111,28 +108,24 @@ function SidebarComponent({
                       className="nav-link text-left "
                     >
                       <p>Recruitment Status </p>
-                      {/* <span className="badge badge-info right">0</span> */}
                     </Link>
                   </li>
 
                   <li className="nav-item">
                     <Link to={"/modeofwork"} className="nav-link text-left ">
                       <p>Mode of Work </p>
-                      {/* <span className="badge badge-info right">0</span> */}
                     </Link>
                   </li>
 
                   <li className="nav-item">
                     <Link to={"/interviewtype"} className="nav-link text-left ">
                       <p>Interview Type </p>
-                      {/* <span className="badge badge-info right">0</span> */}
                     </Link>
                   </li>
 
                   <li className="nav-item">
                     <Link to={"/interviewer"} className="nav-link text-left ">
                       <p>Interviewer </p>
-                      {/* <span className="badge badge-info right">0</span> */}
                     </Link>
                   </li>
 
