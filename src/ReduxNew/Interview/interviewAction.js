@@ -24,14 +24,14 @@ const dataRequest = (type) => {
   };
 
 
-export const addInterviewAction = (formData, callback) => {
+export const addInterviewAction = (formData, id) => {
     return async (dispatch) => {
       dispatch(dataRequest(ADD_INTERVIEW_REQUEST));
       await addInterviewService(formData).then(
         (result) => {
         showToastMessageSuccess("Interview scheduled succesfully");
           dispatch(dataSuccess(ADD_INTERVIEW_SUCCESS, result));
-          dispatch(getInterviewById(1));
+          dispatch(getInterviewById(id));
         //   callback(CANDIDATE_LIST);
         },
         (error) => {

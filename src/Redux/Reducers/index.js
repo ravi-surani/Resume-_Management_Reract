@@ -7,7 +7,6 @@ import { viewInterviewReducer } from "../../ReduxNew/Interview/viewInterviewRedu
 import { viewSourceReducer } from "../../ReduxNew/Masters/Source/viewSourceReducer.js";
 
 import { loginUserReducer, getAllUsers, createNewUserReducer, reomveUserReducer } from './LoginReducer.js';
-
 import { getCandidatesReducer, } from './CandidateReducer';
 import { getAllSourceReducer, getActiveSourceReducer, addSourceReducer, updateSourceReducer, removedSourceReducer, } from './SourceReducer';
 import { getAllSkillTypeReducer, addSkillTypeReducer, updateSkillTypeReducer, removedSkillTypeReducer, } from './SkillTypeReducer';

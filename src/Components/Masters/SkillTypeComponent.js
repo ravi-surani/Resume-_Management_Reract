@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
+import * as Yup from "yup";
+import { connect } from "react-redux";
+import Modal from "react-modal";
+import { Formik, useFormik } from "formik";
+
+import DataTable from "../DataTable";
 import NevbarComponent from "../NevbarComponent";
 import SidebarComponent from "../SidebarComponent";
-import { connect } from "react-redux";
-import { Formik, useFormik, useFormikContext } from "formik";
-import DataTable from "../DataTable";
-import * as Yup from "yup";
-import Modal from "react-modal";
-
 import {
   getAllSkillType,
   addNewSkillType,

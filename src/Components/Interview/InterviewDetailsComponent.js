@@ -87,7 +87,7 @@ function InterviewDetailsComponent({
           await addInterviewDispatch({
             ...values,
             candidate_master_id: interviewsDetialsProp?.candidate[0]?.id,
-          });
+          }, id);
         }
         resetForm();
       } catch (error) {
@@ -563,7 +563,7 @@ const mapDispatchtoProps = {
   getActiveInterviewerAction: () => getActiveInterviewer(),
   getAllInterviewModeAction: () => getAllInterviewMode(),
   addNewInterviewAction: (details) => addNewInterview(details),
-  addInterviewDispatch: (details) => addInterviewAction(details),
+  addInterviewDispatch: (details, id) => addInterviewAction(details, id),
   updateInterviewDetailsAction: (details) => updateInterviewDetails(details),
 };
 export default connect(

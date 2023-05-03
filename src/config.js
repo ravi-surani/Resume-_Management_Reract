@@ -6,3 +6,5 @@
     export const CANDIDATE = `${APP_API_URL}/candidatemaster`;
     export const INTERVIEW = `${APP_API_URL}/interviews`;
     export const SOURCE = `${APP_API_URL}/sourcemaster`;
+    export const RECRUITMENT = `${APP_API_URL}/recruitmentstatusmaster`;
+ 
