@@ -1,5 +1,5 @@
    // const APP_API_URL = "http://127.0.0.1:8000/api"
-   const APP_API_URL = "recruitment.api.weybee.in"
+   const APP_API_URL = "https://recruitment.api.weybee.in/api"
 
 
     export const LOGIN_API = `${APP_API_URL}/login`;
