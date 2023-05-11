@@ -15,8 +15,8 @@ import {
 
 import SidebarComponent from "../SidebarComponent";
 import NevbarComponent from "../NevbarComponent";
-import { Link, useParams } from "react-router-dom";
-import { addInterviewAction } from "../../ReduxNew/Interview/interviewAction";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { addInterviewAction, getInterviewByInterviewId } from "../../ReduxNew/Interview/interviewAction";
 
 function InterviewDetailsComponent({
   interviewsDetialsProp,
@@ -28,14 +28,14 @@ function InterviewDetailsComponent({
   getActiveInterviewTypeAction,
   getActiveInterviewerAction,
   getAllInterviewModeAction,
-  // addNewInterviewAction,
   addInterviewDispatch,
   updateInterviewDetailsAction,
+  getInterviewByInterviewIdResponse,
 }) {
   const { id } = useParams();
+  const navigate = useNavigate()
   const [scheduleInterview, setScheduleInterview] = useState();
   const [isLoading, setIsLoading] = useState(false);
-
 
   useEffect(() => {
     if (id) {
@@ -44,7 +44,13 @@ function InterviewDetailsComponent({
     getActiveInterviewTypeAction();
     getActiveInterviewerAction();
     getAllInterviewModeAction();
+    
   }, [newInterviewsProp]);
+
+  const handleEditInterview = (id) => {
+    navigate(`/interview/edit/${id}`)
+  }
+
 
   const formikScheduleInterviewForm = useFormik({
     initialValues: {
@@ -62,21 +68,6 @@ function InterviewDetailsComponent({
       date: Yup.string().required("Date is required"),
       location_link: Yup.string().required("Location or link is required"),
     }),
-    // onSubmit: (values, { resetForm }) => {
-    //   if (values?.id) {
-    //     updateInterviewDetailsAction(values);
-    //   } else {
-    //     // addNewInterviewAction({
-    //     //   ...values,
-    //     //   candidate_master_id: interviewsDetialsProp?.candidate[0]?.id,
-    //     // });
-    //     addInterviewDispatch({
-    //       ...values,
-    //       candidate_master_id: interviewsDetialsProp?.candidate[0]?.id,
-    //     });
-    //   }
-    //   resetForm();
-    // },
     onSubmit: async (values, { resetForm, setSubmitting }) => {
       // setSubmitting(true);
       setIsLoading(true);
@@ -89,16 +80,22 @@ function InterviewDetailsComponent({
             candidate_master_id: interviewsDetialsProp?.candidate[0]?.id,
           }, id);
         }
-        resetForm();
+      
+       resetForm({
+        interview_type_id:'select',
+        interviewer_id:'select',
+        interview_mode_id:'select',
+        date: '',
+        location_link: '',
+      })
       } catch (error) {
         console.log(error)
       } finally {
         setIsLoading(false);
       }
     }
-    
   });
-  console.log(isLoading, "loading state")
+  console.log(getInterviewByInterviewIdResponse)
 
   return (
     <>
@@ -197,11 +194,11 @@ function InterviewDetailsComponent({
                               {isLoading &&  
                               <button className="btn btn-primary btn-sm" disabled={isLoading}>
                                 <span
-                                  class="spinner-border spinner-border-sm"
+                                  className="spinner-border spinner-border-sm"
                                   role="status"
                                   aria-hidden="true"
                                 ></span>
-                                <span class="sr-only">Loading...</span>
+                                <span className="sr-only">Loading...</span>
                               </button>
                               }
                             </div>
@@ -218,6 +215,7 @@ function InterviewDetailsComponent({
                                     id="interview_type_id"
                                     className={"form-control "}
                                     name="interview_type_id"
+                                    value={formikScheduleInterviewForm.values.interview_type_id}
                                     onChange={(selectedOption) => {
                                       formikScheduleInterviewForm.setFieldValue(
                                         "interview_type_id",
@@ -228,19 +226,19 @@ function InterviewDetailsComponent({
                                       formikScheduleInterviewForm.handleBlur
                                     }
                                   >
-                                    <option disabled selected="selected">
+                                    <option selected="selected">
                                       Select{" "}
                                     </option>
                                     {interviewTypesListProp?.map((Types) => {
                                       return (
                                         <option
                                           value={Types.id}
-                                          selected={
-                                            formikScheduleInterviewForm?.values
-                                              ?.interview_type_id == Types.id
-                                              ? true
-                                              : false
-                                          }
+                                          // selected={
+                                          //   formikScheduleInterviewForm?.values
+                                          //     ?.interview_type_id == Types.id
+                                          //     ? true
+                                          //     : false
+                                          // }
                                         >
                                           {Types.interview_type}{" "}
                                         </option>
@@ -271,6 +269,7 @@ function InterviewDetailsComponent({
                                     id="interviewer_id"
                                     className={"form-control "}
                                     name="interviewer_id"
+                                    value={formikScheduleInterviewForm.values.interviewer_id}
                                     onChange={(selectedOption) => {
                                       formikScheduleInterviewForm.setFieldValue(
                                         "interviewer_id",
@@ -281,7 +280,7 @@ function InterviewDetailsComponent({
                                       formikScheduleInterviewForm.handleBlur
                                     }
                                   >
-                                    <option disabled selected="selected">
+                                    <option selected="selected">
                                       Select{" "}
                                     </option>
                                     {interviewerListProp?.map((interviewer) => {
@@ -325,6 +324,7 @@ function InterviewDetailsComponent({
                                     id="interview_mode_id"
                                     className={"form-control "}
                                     name="interview_mode_id"
+                                    value={formikScheduleInterviewForm.values.interview_mode_id}
                                     onChange={(selectedOption) => {
                                       formikScheduleInterviewForm.setFieldValue(
                                         "interview_mode_id",
@@ -335,7 +335,7 @@ function InterviewDetailsComponent({
                                       formikScheduleInterviewForm.handleBlur
                                     }
                                   >
-                                    <option disabled selected="selected">
+                                    <option selected="selected">
                                       Select{" "}
                                     </option>
                                     {interviewModeListProp?.map((mode) => (
@@ -486,7 +486,7 @@ function InterviewDetailsComponent({
                         <th>Remarks</th>
                         <th>Location Link</th>
                         <th>Points</th>
-                        {/* <th>Action</th> */}
+                        <th>Action</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -500,6 +500,7 @@ function InterviewDetailsComponent({
                             <td>{interview?.remarks}</td>
                             <td>{interview?.location_link}</td>
                             <td>{interview?.total_rating}</td>
+                            <td><button className="btn btn-info btn-sm" onClick={()=>handleEditInterview(interview.id)}>Edit</button></td>
                           </tr>
                         );
                       })}

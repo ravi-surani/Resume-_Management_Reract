@@ -5,6 +5,8 @@ import { interviewReducer } from "../../ReduxNew/Interview/interviewReducer.js";
 import { viewCandidateReducer } from "../../ReduxNew/Candidate/viewCandidateReducer.js";
 import { viewInterviewReducer } from "../../ReduxNew/Interview/viewInterviewReducer.js";
 import { viewSourceReducer } from "../../ReduxNew/Masters/Source/viewSourceReducer.js";
+import { viewActiveSkillTypeReducer } from "../../ReduxNew/SkillType/viewActiveSkillTypeReducer.js";
+import { viewInterviewByIdReducer } from "../../ReduxNew/Interview/viewInterviewByIdreducer.js";
 
 import { loginUserReducer, getAllUsers, createNewUserReducer, reomveUserReducer } from './LoginReducer.js';
 import { getCandidatesReducer, } from './CandidateReducer';
@@ -21,7 +23,7 @@ import { getAllInterviewsReducer, getInterviewsByIdReducer, addInterviewsReducer
 
 
 export const MainReducer = combineReducers({
-    loginReducer, addCandidateReducer,interviewReducer,viewCandidateReducer,viewInterviewReducer,viewSourceReducer,
+    loginReducer, addCandidateReducer,interviewReducer,viewCandidateReducer,viewInterviewReducer,viewSourceReducer,viewActiveSkillTypeReducer,viewInterviewByIdReducer,
 
 
     

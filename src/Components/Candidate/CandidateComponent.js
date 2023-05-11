@@ -55,20 +55,14 @@ function CandidateComponent({ candidateListProp, getAllCandidatesAction, viewCan
     }
 //   }, [candidateListProp]);
   }, [candidatesResponse, candidatesLoading]);
+  console.log(candidateList)
 
   const onSearchfilter = (event) => {
     if (event?.target?.value) {
       setTableData(
         candidateList.filter(
-          (modeOfWork) =>
-            modeOfWork.interviewer
-              .toLocaleLowerCase()
-              .includes(event.target.value.toLocaleLowerCase()) ||
-            modeOfWork.email
-              .toLocaleLowerCase()
-              .includes(event.target.value.toLocaleLowerCase()) ||
-            modeOfWork.contect_no
-              .toLocaleLowerCase()
+          (data) =>
+            data.candidate?.toLocaleLowerCase()
               .includes(event.target.value.toLocaleLowerCase())
         )
       );
@@ -134,7 +128,6 @@ function CandidateComponent({ candidateListProp, getAllCandidatesAction, viewCan
 }
 
 const mapStatetoProps = (state) => {
-    console.log(state?.getCandidatesReducer?.CandidateList)
   return {
     // candidateListProp: state?.getCandidatesReducer?.CandidateList,
     candidatesLoading:state.viewCandidateReducer.loading,

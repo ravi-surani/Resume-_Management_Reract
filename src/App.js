@@ -20,6 +20,7 @@ import InterviewDetailsComponent from './Components/Interview/InterviewDetailsCo
 import LoginComponent from './Components/Login/LoginComponent';
 import CalendarComponent from './Components/Calendar/CalendarComponent';
 import UsersComponent from './Components/Login/UsersComponent';
+import EditScheduledInterview from './Components/Interview/EditScheduledInterview';
 
 function App() {
   return (
@@ -47,6 +48,7 @@ function App() {
           {/* Interview */}
           <Route path="/interview" element={<InterviewComponent />} />
           <Route path="/interview/:id" element={<InterviewDetailsComponent />} />
+          <Route path="/interview/edit/:id" element={<EditScheduledInterview />} />
 
           {/* Masters */}
           <Route path="/source" element={<SourceComponent />} />

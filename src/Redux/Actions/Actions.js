@@ -202,7 +202,8 @@ const getCandidateById = (id) => {
 const updateCandidateDetails = (details) => {
   return (Dispatch) => {
     Dispatch({ type: Constants.UPDATE_CANDIDATES_REQUEST });
-    Services.patchService("candidatemaster", details.id, details).then(
+    console.log(details)
+    Services.postIdService("candidatemaster/update", details.id, details).then(
       (response) => {
         if (response.success) {
           return Dispatch({
@@ -749,6 +750,7 @@ const addNewRecruitmentStatus = (details) => {
     Services.postService("recruitmentstatusmaster", details).then(
       (response) => {
         if (response.success) {
+          Dispatch(getAllRecruitmentStatus());
           return Dispatch({
             type: Constants.ADD_RECRUITMENT_STATUS_SUCESS,
             data: response.skill_type,
@@ -776,6 +778,7 @@ const updateSRecruitmentStatusTypeDetails = (details) => {
     Services.patchService("recruitmentstatusmaster", details?.id, details).then(
       (response) => {
         if (response.success) {
+          Dispatch(getAllRecruitmentStatus());
           return Dispatch({
             type: Constants.UPDATE_RECRUITMENT_STATUS_SUCESS,
             data: response.skill_type,

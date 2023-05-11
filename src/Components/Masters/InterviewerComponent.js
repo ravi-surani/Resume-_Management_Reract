@@ -67,7 +67,9 @@ function InterviewerComponent({
     validationSchema: Yup.object().shape({
       name: Yup.string().required("Please enter Name."),
       email: Yup.string().required("Please enter Email."),
-      contect_no: Yup.string().required("Please enter Contact No."),
+      contect_no: Yup.string()
+      .required("Contact number is required")
+      .matches(/^[0-9]{10}$/, "Contact number is not valid"),
       // status: Yup.string().required("Please status."),
     }),
 
@@ -215,7 +217,7 @@ function InterviewerComponent({
           contentLabel="Example Modal"
         >
           <div className="modal-header">
-            <h4>Mode of Work Details</h4>
+            <h4>Interviewer Details</h4>
             <button className="btn btn-danger  btn-sm" onClick={onCloseModel}>
               {" "}
               X

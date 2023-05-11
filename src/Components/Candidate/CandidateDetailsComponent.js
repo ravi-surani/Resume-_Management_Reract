@@ -5,13 +5,14 @@ import { getCandidateById } from "../../Redux/Actions/Actions";
 
 import SidebarComponent from "../SidebarComponent";
 import NevbarComponent from "../NevbarComponent";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 function CandidateDetailsComponent({
   candidateDetialsProp,
   getCandidateByIdAction,
 }) {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (id) {
@@ -43,9 +44,9 @@ function CandidateDetailsComponent({
               >
                 Interview
               </Link>
-              <Link to={"/candidate"} className="btn btn-danger">
+              <button className="btn btn-danger" onClick={()=>navigate(-1)}>
                 Back
-              </Link>
+              </button>
             </div>
           </div>
           <div className="wrapper">

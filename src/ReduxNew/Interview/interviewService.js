@@ -1,5 +1,5 @@
 import axios from "axios";
-import { INTERVIEW } from "../../config";
+import { INTERVIEW, INTERVIEW_BY_ID } from "../../config";
 
 export const addInterviewService = async (formData) => {
     return axios({
@@ -12,4 +12,16 @@ export const addInterviewService = async (formData) => {
 
   export const viewInterviewService = async () => {
     return axios.get(`${INTERVIEW}`);
+  };
+
+  export const getInterviewByIdService = async (id) => {
+    return axios.get(`${INTERVIEW_BY_ID}/${id}`);
+  };
+
+  export const updateInterviewByIdService = async (formData, id) => {
+    return axios({
+      method: "put",
+      url: `${INTERVIEW}/${id}`,
+      data: formData,
+    });
   };

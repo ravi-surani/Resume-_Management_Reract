@@ -24,6 +24,17 @@ const postService = (endPoint, details) => {
         .then(Response => Response.data).catch(error => { return error.response });
 }
 
+// post Service
+const postIdService = (endPoint,id, details) => {
+    console.log(endPoint,id, details);
+    return axios.post(Constants.BASEURL + endPoint + '/' + id, details, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    })
+        .then(Response => Response.data).catch(error => { return error.response });
+}
+
 // patch Service
 const patchService = (endPoint, id, details) => {
     return axios.patch(Constants.BASEURL + endPoint + '/' + id, details)
@@ -43,4 +54,5 @@ export const Services = {
     postService,
     patchService,
     deleteService,
+    postIdService
 }

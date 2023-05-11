@@ -210,7 +210,7 @@ function InterviewTypeComponent({
           contentLabel="Example Modal"
         >
           <div className="modal-header">
-            <h4>Mode of Work Details</h4>
+            <h4>Interview Type Details</h4>
             <button className="btn btn-danger  btn-sm" onClick={onCloseModel}>
               {" "}
               X

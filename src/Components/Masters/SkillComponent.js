@@ -15,6 +15,7 @@ import {
 } from "../../Redux/Actions/Actions";
 
 import NevbarComponent from "../NevbarComponent";
+import { viewActiveSkillType } from "../../ReduxNew/SkillType/skillTypeAction";
 
 function SkillComponent({
   skillsTypeListProp,
@@ -27,6 +28,8 @@ function SkillComponent({
   addNewSkillAction,
   updateSkillDetailsAction,
   removeSkillAction,
+  getActiveskillType,
+  activeSkillTypeResponse
 }) {
   const searchRef = useRef("");
   const [skillTypeList, setSkillTypeList] = useState(null);
@@ -57,6 +60,7 @@ function SkillComponent({
   useEffect(() => {
     getAllSkillAction();
     getAllSkillTypeAction();
+    getActiveskillType();
   }, [newSkillAddedProp, skillUpdatedProp, skillRemovedProp]);
 
   const formik = useFormik({
@@ -82,6 +86,8 @@ function SkillComponent({
       setIsModelOpen(false);
     },
   });
+
+  console.log(activeSkillTypeResponse, "activeSkillTypeResponse")
 
   useEffect(() => {
     if (skillListProp) {
@@ -139,6 +145,7 @@ function SkillComponent({
   const onCloseModel = () => {
     setIsModelOpen(false);
   };
+  console.log(skillTypeList)
 
   const onSearchfilter = (event) => {
     if (event?.target?.value) {
@@ -146,7 +153,10 @@ function SkillComponent({
         skillTypeList.filter((skill) =>
           skill.skill_type_id
             .toLocaleLowerCase()
-            .includes(event.target.value.toLocaleLowerCase())
+            .includes(event.target.value.toLocaleLowerCase())||
+            skill.skill
+              .toLocaleLowerCase()
+              .includes(event.target.value.toLocaleLowerCase())
         )
       );
     } else {
@@ -282,7 +292,7 @@ function SkillComponent({
                         <option disabled selected="selected">
                           Select{" "}
                         </option>
-                        {skillsTypeListProp.map((skillsType) => (
+                        {activeSkillTypeResponse && activeSkillTypeResponse.map((skillsType) => (
                           <option
                             value={skillsType.id}
                             selected={
@@ -369,6 +379,8 @@ function SkillComponent({
 
 const mapStatetoProps = (state) => {
   return {
+    activeSkillTypeResponse: state.viewActiveSkillTypeReducer.data,
+
     skillsTypeListProp: state?.getAllSkillTypeReducer?.skillsTypeList,
     skillListProp: state?.getAllSkillReducer?.skillsList,
     newSkillAddedProp: state?.addSkillReducer?.newSkillAdded,
@@ -378,6 +390,8 @@ const mapStatetoProps = (state) => {
 };
 
 const mapDispatchtoProps = {
+  getActiveskillType: ()=> viewActiveSkillType(),
+
   getAllSkillTypeAction: () => getAllSkillType(),
   getAllSkillAction: () => getAllSkill(),
   addNewSkillAction: (details) => addNewSkill(details),

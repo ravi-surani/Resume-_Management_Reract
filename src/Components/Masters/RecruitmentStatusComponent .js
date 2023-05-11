@@ -24,6 +24,7 @@ function RecruitmentStatusComponent({
   addNewRecruitmentStatusAction,
   updateSRecruitmentStatusAction,
   removeRecruitmentStatusAction,
+  recruitmentStatusLoading
 }) {
   const searchRef = useRef("");
   const [recruitmentStatusList, setRecruitmentStatusList] = useState(null);
@@ -57,6 +58,7 @@ function RecruitmentStatusComponent({
     recruitmentStatusUpdatedProps,
     recruitmentStatusRemovedProps,
   ]);
+  console.log(recruitmentStatusLoading, "recruitmentStatusLoading")
 
   const formik = useFormik({
     initialValues: {
@@ -139,7 +141,6 @@ function RecruitmentStatusComponent({
       setTableData(recruitmentStatusList);
     }
   };
-console.log(recruitmentStatusList, "recruitmentStatusList")
   const onClearSearch = (event) => {
     searchRef.current.value = null;
     setTableData(recruitmentStatusList);
@@ -190,7 +191,7 @@ console.log(recruitmentStatusList, "recruitmentStatusList")
           </div>
           <div className="wrapper">
             <section className="content">
-              <DataTable columns={TableColumns} tableData={tableData} />
+              <DataTable columns={TableColumns} tableData={tableData} isLoading={recruitmentStatusLoading}/>
             </section>
           </div>
         </div>
@@ -322,6 +323,7 @@ console.log(recruitmentStatusList, "recruitmentStatusList")
 
 const mapStatetoProps = (state) => {
   return {
+    recruitmentStatusLoading: state.getAllRecruitmentStatusReducer.Loading,
     recruitmentStatusListProps:
       state?.getAllRecruitmentStatusReducer?.RecruitmentStatusList,
     recruitmentStatusAddedProps:

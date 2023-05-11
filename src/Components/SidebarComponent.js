@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
-
 import { setUserLoginDetails, userLogout } from "../Redux/Actions/Actions";
 
 function SidebarComponent({
@@ -27,26 +26,16 @@ function SidebarComponent({
     navigate("/login");
   };
 
+
+
   return (
     <>
-      {/* <NevbarComponent />
-            <HeaderComponent /> */}
+
       <aside className="main-sidebar sidebar-dark-primary elevation-4">
         <Link to="/" className="brand-link">
-          {/* <Link to="index3.html" className="brand-link"></Link> */}
           Resume Managemant
         </Link>
         <div className="sidebar">
-          {/* <div className="form-inline">
-                        <div className="input-group" data-widget="sidebar-search">
-                            <input className="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search" />
-                            <div className="input-group-append">
-                                <button className="btn btn-sidebar">
-                                    X
-                                </button>
-                            </div>
-                        </div>
-                    </div> */}
           <nav className="mt-2">
             <ul
               className="nav nav-pills nav-sidebar flex-column"
@@ -57,48 +46,119 @@ function SidebarComponent({
               <li className="nav-item">
                 <Link to={"/"} className="nav-link text-left ">
                   <p>Calendar </p>
-                  {/* <span className="badge badge-info right">0</span> */}
                 </Link>
               </li>
 
               <li className="nav-item">
                 <Link to={"/candidate"} className="nav-link text-left ">
                   <p>Candidate </p>
-                  {/* <span className="badge badge-info right">0</span> */}
                 </Link>
               </li>
               <li className="nav-item">
                 <Link to={"/interview"} className="nav-link text-left ">
                   <p>Interview </p>
-                  {/* <span className="badge badge-info right">0</span> */}
                 </Link>
               </li>
 
-              <li className="nav-item">
-                {/* <a href="#" className="nav-link"> */}
-                  <p className="nav-link" style={{cursor:"pointer"}}>
-                    Masters
-                    <span className="badge badge-info right">
-                      &nbsp; 10 &nbsp;
-                    </span>
-                  </p>
-                {/* </a> */}
+              <li class="nav-item">
+                <a
+                  class="nav-link collapsed text-truncate"
+                  href="#submenu1"
+                  data-toggle="collapse"
+                  data-target="#submenu1"
+                >
+                  <span class="d-none d-sm-inline">Masters</span>
+                </a>
+                <div class="collapse" id="submenu1" aria-expanded="true">
+                  <ul class="flex-column  pl-2 nav">
+                    <li class="nav-item">
+                      <Link to={"/source"} className="nav-link text-left ">
+                        <p>- Source</p>
+                      </Link>
+                    </li>
+                    <li class="nav-item">
+                      <Link to={"/skilltypes"} className="nav-link text-left ">
+                        <p>- Skill Type</p>
+                      </Link>
+                    </li>
+                    <li class="nav-item">
+                      <Link to={"/skills"} className="nav-link text-left ">
+                        <p>- Skill</p>
+                      </Link>
+                    </li>
+                    <li class="nav-item">
+                      <Link
+                        to={"/recruitmentstatus"}
+                        className="nav-link text-left "
+                      >
+                        <p>- Recruitment Status</p>
+                      </Link>
+                    </li>
+                    <li class="nav-item">
+                      <Link to={"/modeofwork"} className="nav-link text-left ">
+                        <p>- Mode of Work</p>
+                      </Link>
+                    </li>
+                    <li class="nav-item">
+                      <Link
+                        to={"/interviewtype"}
+                        className="nav-link text-left "
+                      >
+                        <p>- Interview Type</p>
+                      </Link>
+                    </li>
+                    <li class="nav-item">
+                      <Link to={"/interviewer"} className="nav-link text-left ">
+                        <p>- Interviewer</p>
+                      </Link>
+                    </li>
+                    <li class="nav-item">
+                      <Link
+                        to={"/interviewmode"}
+                        className="nav-link text-left "
+                      >
+                        <p>- Interview Mode</p>
+                      </Link>
+                    </li>
+                    <li class="nav-item">
+                      <Link to={"/degree"} className="nav-link text-left ">
+                        <p>- Degree</p>
+                      </Link>
+                    </li>
+                    <li class="nav-item">
+                      <Link to={"/users"} className="nav-link text-left ">
+                        <p>- Users</p>
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+
+              {/* <li className="nav-item">
+                <a href="#" className="nav-link">
+           
+                  Masters
+                  <span className="badge badge-info right">
+                    &nbsp; 10 &nbsp;
+                  </span>
+           
+                </a>
                 <ul className="nav nav-treeview">
                   <li className="nav-item">
                     <Link to={"/source"} className="nav-link text-left ">
-                      <p>Source </p>
+                      <p>Source</p>
                     </Link>
                   </li>
 
                   <li className="nav-item">
                     <Link to={"/skilltypes"} className="nav-link text-left ">
-                      <p>Skill Type </p>
+                      <p>Skill Type</p>
                     </Link>
                   </li>
 
                   <li className="nav-item">
                     <Link to={"/skills"} className="nav-link text-left ">
-                      <p>Skill </p>
+                      <p>Skill</p>
                     </Link>
                   </li>
 
@@ -107,48 +167,48 @@ function SidebarComponent({
                       to={"/recruitmentstatus"}
                       className="nav-link text-left "
                     >
-                      <p>Recruitment Status </p>
+                      <p>Recruitment Status</p>
                     </Link>
                   </li>
 
                   <li className="nav-item">
                     <Link to={"/modeofwork"} className="nav-link text-left ">
-                      <p>Mode of Work </p>
+                      <p>Mode of Work</p>
                     </Link>
                   </li>
 
                   <li className="nav-item">
                     <Link to={"/interviewtype"} className="nav-link text-left ">
-                      <p>Interview Type </p>
+                      <p>Interview Type</p>
                     </Link>
                   </li>
 
                   <li className="nav-item">
                     <Link to={"/interviewer"} className="nav-link text-left ">
-                      <p>Interviewer </p>
+                      <p>Interviewer</p>
                     </Link>
                   </li>
 
                   <li className="nav-item">
                     <Link to={"/interviewmode"} className="nav-link text-left ">
-                      <p>Interview Mode </p>
+                      <p>Interview Mode</p>
                     </Link>
                   </li>
 
                   <li className="nav-item">
                     <Link to={"/degree"} className="nav-link text-left ">
-                      <p>Degree </p>
+                      <p>Degree</p>
                     </Link>
                   </li>
                   <li className="nav-item">
                     <Link to={"/users"} className="nav-link text-left ">
-                      <p>Users </p>
+                      <p>Users</p>
                     </Link>
                   </li>
                 </ul>
-              </li>
+              </li> */}
 
-              <li className="nav-item" style={{cursor: "pointer"}}>
+              <li className="nav-item" style={{ cursor: "pointer" }}>
                 <span
                   onClick={() => logoutAction()}
                   className="nav-link text-left text-red"

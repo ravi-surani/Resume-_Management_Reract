@@ -40,12 +40,15 @@ function CandidateDetailsComponent({
   getActiveModeOfWorkStatusAction,
   getActiveRecruitmentStatusAction,
   addCandidateDispatch,
+  addCandidateLoading,
 }) {
   const [skillDataModel, setSkillDataModel] = useState(false);
   const [previsCompaniesModel, setPrevisCompaniesModel] = useState(false);
   const [skillList, setskillList] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [file, setFile] = useState();
   const { id } = useParams();
+  const params = useParams();
   const navigate = useNavigate();
 
   const initialValues = {
@@ -98,6 +101,8 @@ function CandidateDetailsComponent({
     }
   }, [candidateDetialsProp]);
 
+  console.log(candidateDetialsProp);
+
   useEffect(() => {
     if (newCandidateProps?.sucess || updatedCandidateProps?.sucess) {
       navigate("/candidate");
@@ -109,30 +114,39 @@ function CandidateDetailsComponent({
     validationSchema: Yup.object().shape({
       name: Yup.string().required("Name is required"),
       skills: Yup.array().min(1, "Enter atleast one skill"),
-      email: Yup.string()
-      .email('Invalid email')
-      .required('Email is required'),
+      email: Yup.string().email("Invalid email").required("Email is required"),
       contect_no: Yup.string()
         .required("Contact Number is required")
         .matches(/^[0-9]+$/, "Must be only digits")
         .min(10, "Min 10 digits")
         .max(12, "Max 12 digits"),
       mode_of_work_id: Yup.string().required("Mode of work is required"),
-      degree_id: Yup.string().required("Educaton is required"),
-      total_experience: Yup.string().required("Total Experience is required"),
-      current_salary: Yup.string().required("Current Salary is required"),
-      expected_salary: Yup.string().required("Expected Salary is required"),
+      degree_id: Yup.string().required("Education is required"),
+      // total_experience: Yup.string().required("Total Experience is required"),
+      total_experience: Yup.number()
+        .min(0, "Total experience must be greater than or equal to 0")
+        .required("Current experience is required"),
+      current_salary: Yup.number()
+        .min(0, "Current salary must be greater than or equal to 0")
+        .required("Current salary is required"),
+      passing_grade: Yup.number()
+        .min(0, "Passing grade must be greater than or equal to 0")
+        .required("Passing grade is required"),
+      expected_salary: Yup.number()
+        .min(0, "Expected Salary must be greater than or equal to 0")
+        .required("Expected Salary is required"),
       source_id: Yup.string().required("Source is required"),
     }),
     onSubmit: (values, { resetForm }) => {
+      setIsLoading(true);
       if (values?.id) {
         updateCandidateDetailsAction({ ...values, resume_id: file });
       } else {
         // addNewCandidateAction({ ...values, resume_id: file });
         addCandidateDispatch({ ...values, resume_id: file }, navigate);
       }
+      setIsLoading(false)
       resetForm();
-      // navigate('/candidate');
     },
   });
 
@@ -170,6 +184,10 @@ function CandidateDetailsComponent({
     },
     validationSchema: Yup.object().shape({
       coumpany_name: Yup.string().required("Company Name is required"),
+      from: Yup.date(),
+      to: Yup.date().when("from", (from, schema) => {
+        return schema.min(from, "To date must be later than from date");
+      }),
     }),
     onSubmit: (values, { resetForm }) => {
       formikForm.setFieldValue("previs_companies", [
@@ -236,9 +254,24 @@ function CandidateDetailsComponent({
                   <Link to={"/candidate"} className="btn btn-danger col-1 ">
                     Back
                   </Link>
-                  <button type="submit" className="btn btn-primary col-1 ">
-                    Save
-                  </button>
+                  {!isLoading && (
+                    <button type="submit" className="btn btn-primary col-1 ">
+                      Save
+                    </button>
+                  )}
+                  {isLoading && (
+                    <button
+                      className="btn btn-primary btn-sm"
+                      disabled={isLoading}
+                    >
+                      <span
+                        className="spinner-border spinner-border-sm"
+                        role="status"
+                        aria-hidden="true"
+                      ></span>
+                      <span className="sr-only">Loading...</span>
+                    </button>
+                  )}
                 </div>
                 <div className="wrapper">
                   <section className="content">
@@ -250,7 +283,7 @@ function CandidateDetailsComponent({
                               htmlFor="name"
                               className="font-weight-normal mt-2 h6"
                             >
-                              Name <span className="text-red">* </span>
+                              Name<span className="text-red">* </span>
                             </label>
                             <input
                               id="name"
@@ -274,7 +307,12 @@ function CandidateDetailsComponent({
                               className="font-weight-normal mt-2 h6"
                             >
                               Resume<span className="text-red">* </span>
+                              <br />
+                              <span className="text1">
+                                (Supported Formats: PDF/DOC/JPG )
+                              </span>
                             </label>
+
                             <input
                               id="resume_id"
                               name="resume_id"
@@ -292,6 +330,18 @@ function CandidateDetailsComponent({
                               onBlur={formikForm.handleBlur}
                               // value={formikForm.values.resume_id}
                             />
+                            {params.id && (
+                              <div className="d-flex justify-content-end">
+                                <Link
+                                  to={formikForm.values.resume_id}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  View Resume
+                                </Link>
+                              </div>
+                            )}
+
                             {formikForm.touched.resume_id &&
                             formikForm.errors.resume_id ? (
                               <span className="text-danger small">
@@ -331,7 +381,9 @@ function CandidateDetailsComponent({
                       <div className="col-6">
                         <div className="card">
                           <div className="card-header bg-secondary">
-                            <h3 className="card-title col-10">Skills</h3>
+                            <h3 className="card-title col-10">
+                              Skills<span className="text-red">* </span>
+                            </h3>
                             <button
                               type="button"
                               className="btn btn-light btn-sm col-2"
@@ -595,6 +647,12 @@ function CandidateDetailsComponent({
                           </div>
                           <div className="card-body row">
                             <div className="col-12 form-group row">
+                              <label
+                                htmlFor="passing_year"
+                                className="font-weight-normal mt-2 h6"
+                              >
+                                Degree<span className="text-red">* </span>
+                              </label>
                               <select
                                 id="degree_id"
                                 className={
@@ -666,7 +724,8 @@ function CandidateDetailsComponent({
                                 htmlFor="passing_grade"
                                 className="font-weight-normal mt-2 h6"
                               >
-                                Passing Grade
+                                Passing Grade{" "}
+                                <span className="text-red">*</span>
                               </label>
                               <div className="">
                                 <input
@@ -699,6 +758,7 @@ function CandidateDetailsComponent({
                                 className="font-weight-normal h6"
                               >
                                 Current Salary
+                                <span className="text-red">* </span>
                               </label>
                               <div className="">
                                 <input
@@ -724,6 +784,7 @@ function CandidateDetailsComponent({
                                 className="font-weight-normal h6"
                               >
                                 Expected Salary
+                                <span className="text-red">* </span>
                               </label>
                               <div className="">
                                 <input
@@ -748,7 +809,8 @@ function CandidateDetailsComponent({
                                 htmlFor="total_experience"
                                 className="font-weight-normal mt-2 h6"
                               >
-                                Total Experience (Years)
+                                Total Experience
+                                <span className="text-red">* </span> (Years)
                               </label>
                               <div className="">
                                 <input
@@ -801,7 +863,7 @@ function CandidateDetailsComponent({
                       <div className="col-3">
                         <div className="card">
                           <div className="card-header bg-secondary">
-                            Mode of Work
+                            Mode of Work<span className="text-red">* </span>
                           </div>
                           <div className="card-body">
                             <select
@@ -852,6 +914,7 @@ function CandidateDetailsComponent({
                         <div className="card">
                           <div className="card-header bg-secondary">
                             Source of Connection
+                            <span className="text-red">* </span>
                           </div>
                           <div className="card-body">
                             <select
@@ -1281,6 +1344,9 @@ function CandidateDetailsComponent({
 
 const mapStatetoProps = (state) => {
   return {
+    addCandidateLoading: state.addCandidateReducer.loading,
+    addCandidateResponse: state.addCandidateReducer.data,
+
     sourceListProp: state.getActiveSourceReducer?.sourceList,
     degreeListProp: state?.getActiveDegreeReducer?.DegreeList,
     skillListProp: state?.getActiveSkillReducer?.skillsList,

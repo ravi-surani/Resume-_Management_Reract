@@ -206,7 +206,7 @@ function InterviewModeComponent({
           contentLabel="Example Modal"
         >
           <div className="modal-header">
-            <h4>Mode of Work Details</h4>
+            <h4>Interview Mode Details</h4>
             <button className="btn btn-danger  btn-sm" onClick={onCloseModel}>
               {" "}
               X
@@ -230,7 +230,7 @@ function InterviewModeComponent({
                       htmlFor="interview_mode"
                       className="col-sm-3 col-form-label"
                     >
-                      Interviewer
+                      Interview Mode
                     </label>
                     <div className="col-sm-9">
                       <input

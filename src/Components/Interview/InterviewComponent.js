@@ -135,7 +135,6 @@ function InterviewComponent({
 }
 
 const mapStatetoProps = (state) => {
-  console.log(state.viewInterviewReducer);
   return {
     // interviewsListProps: state?.getAllInterviewsReducer?.InterviewsList,
     interviewsLoading: state.viewInterviewReducer.loading,
