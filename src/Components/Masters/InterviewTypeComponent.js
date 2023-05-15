@@ -25,6 +25,7 @@ function InterviewTypeComponent({
   addNewInterviewTypeStatusction,
   updateInterviewTypeDetailsction,
   removeInterviewTypeStatusction,
+  interviewTypeLoading
 }) {
   const searchRef = useRef("");
   const [interviewType, setInterviewType] = useState(null);
@@ -65,7 +66,7 @@ function InterviewTypeComponent({
       status: true,
     },
     validationSchema: Yup.object().shape({
-      interview_type: Yup.string().required("Please enter Mode of Work."),
+      interview_type: Yup.string().required("Please enter Interview type"),
       // status: Yup.string().required("Please status."),
     }),
 
@@ -81,7 +82,7 @@ function InterviewTypeComponent({
   });
 
   useEffect(() => {
-    if (getAllInterviewTypeProps?.interviewTypesList) {
+    if (!interviewTypeLoading && getAllInterviewTypeProps?.interviewTypesList) {
       let tempList = getAllInterviewTypeProps?.interviewTypesList?.map(
         (interviewType) => {
           return {
@@ -119,7 +120,7 @@ function InterviewTypeComponent({
       setInterviewType(tempList);
       setTableData(tempList);
     }
-  }, [getAllInterviewTypeProps]);
+  }, [getAllInterviewTypeProps, interviewTypeLoading]);
 
   const onSkillTypeRemove = (id) => {
     removeInterviewTypeStatusction(id);
@@ -194,7 +195,7 @@ function InterviewTypeComponent({
               <section>Please Wait...</section>
             ) : (
               <section className="content">
-                <DataTable columns={TableColumns} tableData={tableData} />
+                <DataTable columns={TableColumns} tableData={tableData} isLoading={interviewTypeLoading}/>
               </section>
             )}
           </div>
@@ -326,6 +327,7 @@ function InterviewTypeComponent({
 
 const mapStatetoProps = (state) => {
   return {
+    interviewTypeLoading: state.getAllInterviewTypeReducer.Loading,
     getAllInterviewTypeProps: state?.getAllInterviewTypeReducer,
     addInterviewTypeProps:
       state?.addInterviewTypeReducer?.newInterviewTypeAdded,

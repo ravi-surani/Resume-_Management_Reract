@@ -67,7 +67,7 @@ function SidebarComponent({
                   data-toggle="collapse"
                   data-target="#submenu1"
                 >
-                  <span class="d-none d-sm-inline">Masters</span>
+                  <span class="d-none d-sm-inline">Masters &nbsp; <i className="fa fa-caret-right"></i></span>
                 </a>
                 <div class="collapse" id="submenu1" aria-expanded="true">
                   <ul class="flex-column  pl-2 nav">

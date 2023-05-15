@@ -168,7 +168,7 @@ function CandidateDetailsComponent({
                             {candidateDetialsProp?.state}
                           </h6>
                         </div>
-                        <div className="col-6 row ">
+                        {/* <div className="col-6 row ">
                           <label className="font-weight-normal col-4 ">
                             countary
                           </label>
@@ -176,7 +176,7 @@ function CandidateDetailsComponent({
                             {" "}
                             {candidateDetialsProp?.countary}
                           </h6>
-                        </div>
+                        </div> */}
                       </div>
                     </div>
                   </div>
