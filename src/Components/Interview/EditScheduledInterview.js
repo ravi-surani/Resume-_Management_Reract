@@ -108,7 +108,7 @@ const EditScheduledInterview = ({
     <>
       <NevbarComponent
         title={"Interview"}
-        breadcrumbPath={[{ link: "candidate", value: "Candidate Details" }]}
+        breadcrumbPath={[{ link: "interview", value: "Interview Details" }]}
       />
       <SidebarComponent />
       <div className="container-xl">
