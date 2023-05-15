@@ -260,7 +260,6 @@ const EditScheduledInterview = ({
 };
 
 const mapStatetoProps = (state) => {
-  console.log(state.viewInterviewByIdReducer?.data?.candidate, "123465")
   return {
     getInterviewByInterviewIdLoading: state.viewInterviewByIdReducer.loading,
     getInterviewByInterviewIdResponse: state.viewInterviewByIdReducer.data,

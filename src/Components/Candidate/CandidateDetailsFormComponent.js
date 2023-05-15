@@ -101,8 +101,6 @@ function CandidateDetailsComponent({
     }
   }, [candidateDetialsProp]);
 
-  console.log(candidateDetialsProp);
-
   useEffect(() => {
     if (newCandidateProps?.sucess || updatedCandidateProps?.sucess) {
       navigate("/candidate");
@@ -136,7 +134,10 @@ function CandidateDetailsComponent({
         .min(0, "Expected Salary must be greater than or equal to 0")
         .required("Expected Salary is required"),
       source_id: Yup.string().required("Source is required"),
+      resume_id: Yup.mixed()
+      .required("Please select a resume file"),
     }),
+    
     onSubmit: (values, { resetForm }) => {
       setIsLoading(true);
       if (values?.id) {
@@ -145,7 +146,7 @@ function CandidateDetailsComponent({
         // addNewCandidateAction({ ...values, resume_id: file });
         addCandidateDispatch({ ...values, resume_id: file }, navigate);
       }
-      setIsLoading(false)
+      setIsLoading(false);
       resetForm();
     },
   });

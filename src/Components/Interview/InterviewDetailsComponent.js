@@ -95,7 +95,6 @@ function InterviewDetailsComponent({
       }
     }
   });
-  console.log(getInterviewByInterviewIdResponse)
 
   return (
     <>

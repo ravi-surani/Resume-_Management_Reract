@@ -58,7 +58,6 @@ function RecruitmentStatusComponent({
     recruitmentStatusUpdatedProps,
     recruitmentStatusRemovedProps,
   ]);
-  console.log(recruitmentStatusLoading, "recruitmentStatusLoading")
 
   const formik = useFormik({
     initialValues: {

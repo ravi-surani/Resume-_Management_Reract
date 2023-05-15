@@ -55,7 +55,6 @@ function CandidateComponent({ candidateListProp, getAllCandidatesAction, viewCan
     }
 //   }, [candidateListProp]);
   }, [candidatesResponse, candidatesLoading]);
-  console.log(candidateList)
 
   const onSearchfilter = (event) => {
     if (event?.target?.value) {

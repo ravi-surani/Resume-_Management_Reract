@@ -26,7 +26,6 @@ const postService = (endPoint, details) => {
 
 // post Service
 const postIdService = (endPoint,id, details) => {
-    console.log(endPoint,id, details);
     return axios.post(Constants.BASEURL + endPoint + '/' + id, details, {
         headers: {
             'Content-Type': 'multipart/form-data'

@@ -44,7 +44,6 @@ function SkillComponent({
       bottom: "auto",
       padding: "0px",
       marginRight: "-50%",
-      // transform: 'translate(-50%, -120%)  ',
       width: "30%",
     },
   };
@@ -74,7 +73,6 @@ function SkillComponent({
       skill_type_id: Yup.string()
         .required("Please Select Skill Type.")
         .nullable(),
-      // status: Yup.string().required("Please status."),
     }),
     onSubmit: (values, { resetForm }) => {
       if (values?.id) {
@@ -86,8 +84,6 @@ function SkillComponent({
       setIsModelOpen(false);
     },
   });
-
-  console.log(activeSkillTypeResponse, "activeSkillTypeResponse")
 
   useEffect(() => {
     if (skillListProp) {
@@ -145,7 +141,6 @@ function SkillComponent({
   const onCloseModel = () => {
     setIsModelOpen(false);
   };
-  console.log(skillTypeList)
 
   const onSearchfilter = (event) => {
     if (event?.target?.value) {

@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { connect } from "react-redux";
 import { setUserLoginDetails, userLogout } from "../Redux/Actions/Actions";
 
@@ -9,6 +9,8 @@ function SidebarComponent({
   userLogoutActon,
 }) {
   const navigate = useNavigate();
+  const location = useLocation()
+  const [ariaExpanded, setAriaExpanded] = useState(false)
 
   useEffect(() => {
     if (!userDetailsProps && localStorage.getItem("login_user")?.length) {
@@ -25,12 +27,12 @@ function SidebarComponent({
     userLogoutActon();
     navigate("/login");
   };
-
-
+  function toggleExpanded() {
+    setAriaExpanded(!ariaExpanded);
+  }
 
   return (
     <>
-
       <aside className="main-sidebar sidebar-dark-primary elevation-4">
         <Link to="/" className="brand-link">
           Resume Managemant
@@ -45,48 +47,53 @@ function SidebarComponent({
             >
               <li className="nav-item">
                 <Link to={"/"} className="nav-link text-left ">
-                  <p>Calendar </p>
+                  <p><i className="fa fa-calendar"></i> &nbsp;Calendar </p>
                 </Link>
               </li>
 
               <li className="nav-item">
                 <Link to={"/candidate"} className="nav-link text-left ">
-                  <p>Candidate </p>
+                  <p><i className="fa fa-group"></i> &nbsp;Candidate </p>
                 </Link>
               </li>
               <li className="nav-item">
                 <Link to={"/interview"} className="nav-link text-left ">
-                  <p>Interview </p>
+                  <p><i className="fa fa-clock"></i> &nbsp;Interview </p>
                 </Link>
               </li>
 
-              <li class="nav-item">
+              <li className="nav-item">
                 <a
-                  class="nav-link collapsed text-truncate"
+                  className="nav-link collapsed text-truncate"
                   href="#submenu1"
                   data-toggle="collapse"
                   data-target="#submenu1"
+                  aria-expanded={ariaExpanded}
+                  onClick={toggleExpanded}
                 >
-                  <span class="d-none d-sm-inline">Masters &nbsp; <i className="fa fa-caret-right"></i></span>
+                  <i className="fa fa-list"></i> &nbsp;
+                  <span className="d-none d-sm-inline">Masters &nbsp;   
+                    <i className={`fa ${ariaExpanded ? 'fa-caret-down' : 'fa-caret-right'}`}></i>
+                  </span>
                 </a>
-                <div class="collapse" id="submenu1" aria-expanded="true">
-                  <ul class="flex-column  pl-2 nav">
-                    <li class="nav-item">
+                <div className="collapse" id="submenu1" aria-expanded="true">
+                  <ul className="flex-column  pl-2 nav">
+                    <li className="nav-item">
                       <Link to={"/source"} className="nav-link text-left ">
                         <p>- Source</p>
                       </Link>
                     </li>
-                    <li class="nav-item">
+                    <li className="nav-item">
                       <Link to={"/skilltypes"} className="nav-link text-left ">
                         <p>- Skill Type</p>
                       </Link>
                     </li>
-                    <li class="nav-item">
+                    <li className="nav-item">
                       <Link to={"/skills"} className="nav-link text-left ">
                         <p>- Skill</p>
                       </Link>
                     </li>
-                    <li class="nav-item">
+                    <li className="nav-item">
                       <Link
                         to={"/recruitmentstatus"}
                         className="nav-link text-left "
@@ -94,12 +101,12 @@ function SidebarComponent({
                         <p>- Recruitment Status</p>
                       </Link>
                     </li>
-                    <li class="nav-item">
+                    <li className="nav-item">
                       <Link to={"/modeofwork"} className="nav-link text-left ">
                         <p>- Mode of Work</p>
                       </Link>
                     </li>
-                    <li class="nav-item">
+                    <li className="nav-item">
                       <Link
                         to={"/interviewtype"}
                         className="nav-link text-left "
@@ -107,12 +114,12 @@ function SidebarComponent({
                         <p>- Interview Type</p>
                       </Link>
                     </li>
-                    <li class="nav-item">
+                    <li className="nav-item">
                       <Link to={"/interviewer"} className="nav-link text-left ">
                         <p>- Interviewer</p>
                       </Link>
                     </li>
-                    <li class="nav-item">
+                    <li className="nav-item">
                       <Link
                         to={"/interviewmode"}
                         className="nav-link text-left "
@@ -120,12 +127,12 @@ function SidebarComponent({
                         <p>- Interview Mode</p>
                       </Link>
                     </li>
-                    <li class="nav-item">
+                    <li className="nav-item">
                       <Link to={"/degree"} className="nav-link text-left ">
                         <p>- Degree</p>
                       </Link>
                     </li>
-                    <li class="nav-item">
+                    <li className="nav-item">
                       <Link to={"/users"} className="nav-link text-left ">
                         <p>- Users</p>
                       </Link>
@@ -209,10 +216,12 @@ function SidebarComponent({
               </li> */}
 
               <li className="nav-item" style={{ cursor: "pointer" }}>
+
                 <span
                   onClick={() => logoutAction()}
                   className="nav-link text-left text-red"
                 >
+                  <i className="fa fa-sign-out"></i> &nbsp;
                   Logout
                 </span>
               </li>

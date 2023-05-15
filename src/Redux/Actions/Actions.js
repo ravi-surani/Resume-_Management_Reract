@@ -202,7 +202,6 @@ const getCandidateById = (id) => {
 const updateCandidateDetails = (details) => {
   return (Dispatch) => {
     Dispatch({ type: Constants.UPDATE_CANDIDATES_REQUEST });
-    console.log(details)
     Services.postIdService("candidatemaster/update", details.id, details).then(
       (response) => {
         if (response.success) {
