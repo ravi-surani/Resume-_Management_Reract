@@ -7,7 +7,11 @@ import SidebarComponent from "../SidebarComponent";
 import NevbarComponent from "../NevbarComponent";
 import { viewCandidate } from "../../ReduxNew/Candidate/candidateAction";
 
-function CandidateComponent({ candidateListProp, getAllCandidatesAction, viewCandidatesDispatch, candidatesLoading, candidatesResponse, candidatesError }) {
+function CandidateComponent({
+  viewCandidatesDispatch,
+  candidatesLoading,
+  candidatesResponse,
+}) {
   const searchRef = useRef("");
   const [candidateList, setCandidateList] = useState(null);
   const [tableData, setTableData] = useState([]);
@@ -30,7 +34,7 @@ function CandidateComponent({ candidateListProp, getAllCandidatesAction, viewCan
   useEffect(() => {
     // if (candidateListProp) {
     if (!candidatesLoading && candidatesResponse) {
-    //   let tempList = candidateListProp.map((candidate) => {
+      //   let tempList = candidateListProp.map((candidate) => {
       let tempList = candidatesResponse?.map((candidate) => {
         return {
           id: candidate.id,
@@ -53,16 +57,16 @@ function CandidateComponent({ candidateListProp, getAllCandidatesAction, viewCan
       setCandidateList(tempList);
       setTableData(tempList);
     }
-//   }, [candidateListProp]);
+    //   }, [candidateListProp]);
   }, [candidatesResponse, candidatesLoading]);
 
   const onSearchfilter = (event) => {
     if (event?.target?.value) {
       setTableData(
-        candidateList.filter(
-          (data) =>
-            data.candidate?.toLocaleLowerCase()
-              .includes(event.target.value.toLocaleLowerCase())
+        candidateList.filter((data) =>
+          data.candidate
+            ?.toLocaleLowerCase()
+            .includes(event.target.value.toLocaleLowerCase())
         )
       );
     } else {
@@ -117,7 +121,11 @@ function CandidateComponent({ candidateListProp, getAllCandidatesAction, viewCan
           </div>
           <div className="wrapper">
             <section className="content">
-              <DataTable columns={TableColumns} tableData={tableData} isLoading={candidatesLoading}/>
+              <DataTable
+                columns={TableColumns}
+                tableData={tableData}
+                isLoading={candidatesLoading}
+              />
             </section>
           </div>
         </div>
@@ -129,14 +137,14 @@ function CandidateComponent({ candidateListProp, getAllCandidatesAction, viewCan
 const mapStatetoProps = (state) => {
   return {
     // candidateListProp: state?.getCandidatesReducer?.CandidateList,
-    candidatesLoading:state.viewCandidateReducer.loading,
+    candidatesLoading: state.viewCandidateReducer.loading,
     candidatesResponse: state.viewCandidateReducer.data.data,
-    candidatesError: state.viewCandidateReducer.error
+    candidatesError: state.viewCandidateReducer.error,
   };
 };
 
 const mapDispatchtoProps = {
   // getAllCandidatesAction: () => getAllCandidates(),
-  viewCandidatesDispatch: () => viewCandidate()
+  viewCandidatesDispatch: () => viewCandidate(),
 };
 export default connect(mapStatetoProps, mapDispatchtoProps)(CandidateComponent);

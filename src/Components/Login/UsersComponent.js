@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Modal from "react-modal";
 import { connect } from "react-redux";
-
-import { Formik, useFormik, useFormikContext } from "formik";
+import { Formik, useFormik } from "formik";
 import * as Yup from "yup";
 
 import {
@@ -22,6 +21,7 @@ function UsersComponent({
   getAllUsersAction,
   createNewUserAction,
   removeUserAction,
+  usersLoading
 }) {
   const searchRef = useRef("");
   const [userList, setUserList] = useState(null);
@@ -176,7 +176,7 @@ function UsersComponent({
           </div>
           <div className="wrapper">
             <section className="content">
-              <DataTable columns={TableColumns} tableData={tableData} />
+              <DataTable columns={TableColumns} tableData={tableData} isLoading={usersLoading}/>
             </section>
           </div>
         </div>
@@ -344,6 +344,7 @@ function UsersComponent({
 
 const mapStatetoProps = (state) => {
   return {
+    usersLoading: state.getAllUsers.Loading,
     userDetailsProp: state?.getAllUsers?.userList,
     userListProp: state?.createNewUserReducer?.userDetails,
     removeUserDetailsProp: state?.reomveUserReducer?.removeUserDetails,

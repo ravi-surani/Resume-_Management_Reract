@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
-
-import { getCandidateById } from "../../Redux/Actions/Actions";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 import SidebarComponent from "../SidebarComponent";
 import NevbarComponent from "../NevbarComponent";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { getCandidateById } from "../../Redux/Actions/Actions";
+
 
 function CandidateDetailsComponent({
   candidateDetialsProp,

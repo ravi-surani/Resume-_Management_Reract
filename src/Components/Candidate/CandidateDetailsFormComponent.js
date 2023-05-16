@@ -1,11 +1,12 @@
-import React, { useEffect, useRef, useState } from "react";
-
+import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { connect } from "react-redux";
-
-import { Formik, useFormik, useFormikContext } from "formik";
+import { Formik, useFormik } from "formik";
 import * as Yup from "yup";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
+import SidebarComponent from "../SidebarComponent";
+import NevbarComponent from "../NevbarComponent";
 import {
   getCandidateById,
   getActiveSkill,
@@ -14,12 +15,7 @@ import {
   getActiveModeOfWorkStatus,
   getActiveRecruitmentStatus,
   updateCandidateDetails,
-  // addNewCandidate,
 } from "../../Redux/Actions/Actions";
-
-import SidebarComponent from "../SidebarComponent";
-import NevbarComponent from "../NevbarComponent";
-import { Link, useNavigate, useParams } from "react-router-dom";
 import { addCandidate } from "../../ReduxNew/Candidate/candidateAction";
 
 function CandidateDetailsComponent({
@@ -31,7 +27,6 @@ function CandidateDetailsComponent({
   recruitmentStatusListProps,
   newCandidateProps,
   updatedCandidateProps,
-  // addNewCandidateAction,
   updateCandidateDetailsAction,
   getActiveSkillAction,
   getActiveSourceAction,

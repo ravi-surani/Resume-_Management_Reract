@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Modal from "react-modal";
 import { connect } from "react-redux";
-
-import { Formik, useFormik, useFormikContext } from "formik";
+import { Formik, useFormik } from "formik";
 import * as Yup from "yup";
 
 import {
@@ -25,6 +24,7 @@ function DegreeComponent({
   addNewDegreeModeAction,
   updateDegreeModeDetailsAction,
   removeDegreeModeStatusAction,
+  degreeLoading
 }) {
   const searchRef = useRef("");
   const [DegreeList, setDegreeList] = useState(null);
@@ -192,7 +192,7 @@ function DegreeComponent({
           </div>
           <div className="wrapper">
             <section className="content">
-              <DataTable columns={TableColumns} tableData={tableData} />
+              <DataTable columns={TableColumns} tableData={tableData} isLoading={degreeLoading}/>
             </section>
           </div>
         </div>
@@ -317,6 +317,7 @@ function DegreeComponent({
 
 const mapStatetoProps = (state) => {
   return {
+    degreeLoading: state.getAllDegreeReducer.Loading,
     DegreeListProp: state?.getAllDegreeReducer?.DegreeList,
     newDegreeAddedProp: state?.addDegreeReducer?.newDegreeAdded,
     DegreeUpdatedProp: state?.updateDegreeReducer?.DegreeUpdated,

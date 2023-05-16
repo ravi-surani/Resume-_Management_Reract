@@ -1,10 +1,12 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { connect } from "react-redux";
-
-import { Formik, useFormik, useFormikContext } from "formik";
+import { Formik, useFormik } from "formik";
 import * as Yup from "yup";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
+import SidebarComponent from "../SidebarComponent";
+import NevbarComponent from "../NevbarComponent";
 import {
   getCandidateById,
   getAllSkill,
@@ -15,10 +17,6 @@ import {
   updateCandidateDetails,
   addNewCandidate,
 } from "../../Redux/Actions/Actions";
-
-import SidebarComponent from "../SidebarComponent";
-import NevbarComponent from "../NevbarComponent";
-import { Link, useNavigate, useParams } from "react-router-dom";
 
 function InterviewDetailsFormComponent({
   candidateDetialsProp,

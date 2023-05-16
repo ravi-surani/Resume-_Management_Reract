@@ -23,6 +23,7 @@ function SkillTypeComponent({
   addNewSkillTypeAction,
   updateSkillTypeDetailsAction,
   removeSkillTypeAction,
+  skillTypeloading
 }) {
   const searchRef = useRef("");
   const [skillTypeList, setSkillTypeList] = useState(null);
@@ -184,7 +185,7 @@ function SkillTypeComponent({
           </div>
           <div className="wrapper">
             <section className="content">
-              <DataTable columns={TableColumns} tableData={tableData} />
+              <DataTable columns={TableColumns} tableData={tableData} isLoading={skillTypeloading}/>
             </section>
           </div>
         </div>
@@ -313,6 +314,7 @@ function SkillTypeComponent({
 
 const mapStatetoProps = (state) => {
   return {
+    skillTypeloading: state.getAllSkillTypeReducer.Loading,
     skillsTypeListProp: state?.getAllSkillTypeReducer?.skillsTypeList,
     newSkillTypeAddedProp: state?.addSkillTypeReducer?.newSkillTypeAdded,
     skillTypeUpdatedProp: state?.updateSkillTypeReducer?.skillTypeUpdated,

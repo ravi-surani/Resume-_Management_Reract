@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Modal from "react-modal";
 import { connect } from "react-redux";
-
-import { Formik, useFormik, useFormikContext } from "formik";
+import { Formik, useFormik } from "formik";
 import * as Yup from "yup";
 
 import {
@@ -25,6 +24,7 @@ function InterviewModeComponent({
   addNewInterviewModeAction,
   updateInterviewModeDetailsAction,
   removeInterviewModeStatusAction,
+  interviewModeLoading
 }) {
   const searchRef = useRef("");
   const [interviewModeList, setInterviewModeList] = useState(null);
@@ -191,7 +191,7 @@ function InterviewModeComponent({
           </div>
           <div className="wrapper">
             <section className="content">
-              <DataTable columns={TableColumns} tableData={tableData} />
+              <DataTable columns={TableColumns} tableData={tableData} isLoading={interviewModeLoading}/>
             </section>
           </div>
         </div>
@@ -321,6 +321,7 @@ function InterviewModeComponent({
 
 const mapStatetoProps = (state) => {
   return {
+    interviewModeLoading: state.getAllInterviewModeReducer.Loading,
     interviewModeListProp: state?.getAllInterviewModeReducer?.interviewModeList,
     newinterviewModeAddedProp:
       state?.addInterviewModeReducer?.newinterviewModeAdded,

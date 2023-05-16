@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Modal from "react-modal";
 import { connect } from "react-redux";
-
-import { Formik, useFormik, useFormikContext } from "formik";
+import { Formik, useFormik } from "formik";
 import * as Yup from "yup";
 
 import {
@@ -25,6 +24,7 @@ function InterviewerComponent({
   addNewInterviewerAction,
   updateInterviewerDetailsAction,
   removeInterviewerStatusAction,
+  interviewerLoading
 }) {
   const searchRef = useRef("");
   const [interviewerList, setInterviewerList] = useState(null);
@@ -202,7 +202,7 @@ function InterviewerComponent({
           </div>
           <div className="wrapper">
             <section className="content">
-              <DataTable columns={TableColumns} tableData={tableData} />
+              <DataTable columns={TableColumns} tableData={tableData} isLoading={interviewerLoading}/>
             </section>
           </div>
         </div>
@@ -380,6 +380,7 @@ function InterviewerComponent({
 
 const mapStatetoProps = (state) => {
   return {
+    interviewerLoading: state.getAllInterviewerReducer.Loading,
     interviewerListProp: state?.getAllInterviewerReducer?.interviewerList,
     newinterviewerAddedProp: state?.addInterviewerReducer?.newinterviewerAdded,
     interviewerUpdatedProp: state?.updateInterviewerReducer?.interviewerUpdated,

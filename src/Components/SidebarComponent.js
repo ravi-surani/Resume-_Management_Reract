@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
+
 import { setUserLoginDetails, userLogout } from "../Redux/Actions/Actions";
 
 function SidebarComponent({

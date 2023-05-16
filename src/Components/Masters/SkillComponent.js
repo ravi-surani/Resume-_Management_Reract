@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
-import SidebarComponent from "../SidebarComponent";
 import { connect } from "react-redux";
-import { Formik, useFormik, useFormikContext, validateYupSchema } from "formik";
-import DataTable from "../DataTable";
-import * as Yup from "yup";
 import Modal from "react-modal";
+import { Formik, useFormik } from "formik";
+import * as Yup from "yup";
+
+import SidebarComponent from "../SidebarComponent";
+import DataTable from "../DataTable";
 
 import {
   getAllSkillType,
@@ -29,7 +30,8 @@ function SkillComponent({
   updateSkillDetailsAction,
   removeSkillAction,
   getActiveskillType,
-  activeSkillTypeResponse
+  activeSkillTypeResponse,
+  skillLoading
 }) {
   const searchRef = useRef("");
   const [skillTypeList, setSkillTypeList] = useState(null);
@@ -207,7 +209,7 @@ function SkillComponent({
           </div>
           <div className="wrapper">
             <section className="content">
-              <DataTable columns={TableColumns} tableData={tableData} />
+              <DataTable columns={TableColumns} tableData={tableData} isLoading={skillLoading}/>
             </section>
           </div>
         </div>
@@ -375,7 +377,7 @@ function SkillComponent({
 const mapStatetoProps = (state) => {
   return {
     activeSkillTypeResponse: state.viewActiveSkillTypeReducer.data,
-
+    skillLoading: state.getAllSkillReducer.Loading,
     skillsTypeListProp: state?.getAllSkillTypeReducer?.skillsTypeList,
     skillListProp: state?.getAllSkillReducer?.skillsList,
     newSkillAddedProp: state?.addSkillReducer?.newSkillAdded,

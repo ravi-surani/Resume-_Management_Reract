@@ -1,4 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { connect } from "react-redux";
+import * as Yup from "yup";
+import { useFormik } from "formik";
+
+import NevbarComponent from "../NevbarComponent";
+import SidebarComponent from "../SidebarComponent";
 import {
   addNewInterview,
   getActiveInterviewType,
@@ -12,12 +19,6 @@ import {
   getInterviewByInterviewId,
   updateInterviewById,
 } from "../../ReduxNew/Interview/interviewAction";
-import { connect } from "react-redux";
-import * as Yup from "yup";
-import { useFormik } from "formik";
-import NevbarComponent from "../NevbarComponent";
-import SidebarComponent from "../SidebarComponent";
-import { useNavigate, useParams } from "react-router-dom";
 
 const EditScheduledInterview = ({
   interviewTypeListResponse,

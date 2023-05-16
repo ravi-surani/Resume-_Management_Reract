@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Modal from "react-modal";
 import { connect } from "react-redux";
-
-import { Formik, useFormik, useFormikContext } from "formik";
+import { Formik, useFormik } from "formik";
 import * as Yup from "yup";
 
 import {
@@ -25,6 +24,7 @@ function ModeOfWorkComponent({
   addNewModeOfWorkStatusAction,
   updateModeOfWorkDetailsAction,
   removeModeOfWorkStatusAction,
+  modeOfWorkLoading
 }) {
   const searchRef = useRef("");
   const [modeOfWorkList, setModeOfWorkList] = useState(null);
@@ -185,7 +185,7 @@ function ModeOfWorkComponent({
           </div>
           <div className="wrapper">
             <section className="content">
-              <DataTable columns={TableColumns} tableData={tableData} />
+              <DataTable columns={TableColumns} tableData={tableData} isLoading={modeOfWorkLoading}/>
             </section>
           </div>
         </div>
@@ -316,6 +316,7 @@ function ModeOfWorkComponent({
 
 const mapStatetoProps = (state) => {
   return {
+    modeOfWorkLoading: state.getAllModeOfWorkReducer.Loading,
     modeOfWorkListProp: state?.getAllModeOfWorkReducer?.ModeOfWorkList,
     modeOfWorkAddedProp: state?.addModeOfWorkReducer?.ModeOfWorkAdded,
     modeOfWorkUpdatedProp: state?.updateModeOfWorkReducer?.ModeOfWorkUpdated,

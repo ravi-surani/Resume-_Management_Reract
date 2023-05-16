@@ -1,9 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-
 import { Formik, useFormik } from "formik";
 import * as Yup from "yup";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
+import SidebarComponent from "../SidebarComponent";
+import NevbarComponent from "../NevbarComponent";
 import {
   getInterviewById,
   getActiveInterviewType,
@@ -12,11 +14,7 @@ import {
   addNewInterview,
   updateInterviewDetails,
 } from "../../Redux/Actions/Actions";
-
-import SidebarComponent from "../SidebarComponent";
-import NevbarComponent from "../NevbarComponent";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { addInterviewAction, getInterviewByInterviewId } from "../../ReduxNew/Interview/interviewAction";
+import { addInterviewAction } from "../../ReduxNew/Interview/interviewAction";
 
 function InterviewDetailsComponent({
   interviewsDetialsProp,
@@ -51,7 +49,6 @@ function InterviewDetailsComponent({
     navigate(`/interview/edit/${id}`)
   }
 
-
   const formikScheduleInterviewForm = useFormik({
     initialValues: {
       interview_type_id: "",
@@ -69,7 +66,6 @@ function InterviewDetailsComponent({
       location_link: Yup.string().required("Location or link is required"),
     }),
     onSubmit: async (values, { resetForm, setSubmitting }) => {
-      // setSubmitting(true);
       setIsLoading(true);
       try {
         if (values?.id) {
