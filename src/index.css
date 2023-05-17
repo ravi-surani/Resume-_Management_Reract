@@ -17,4 +17,12 @@ code {
 .text2{
   font-size: 16px;
 }
+.head3{
+  font-size: 20px;
+  font-weight: bold;
+}
+.global-rular{
+  border-bottom: 1px solid black;
+  padding: 3px;
+}
 

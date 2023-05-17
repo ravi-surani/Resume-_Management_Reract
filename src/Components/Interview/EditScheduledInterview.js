@@ -35,11 +35,11 @@ const EditScheduledInterview = ({
   getInterviewByInterviewIdResponse,
   getInterviewByInterviewIdLoading,
   dispatchUpdateInterview,
-  candidate_id
+  candidate_id,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const params = useParams();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (params.id) {
@@ -56,7 +56,7 @@ const EditScheduledInterview = ({
     }
   }, [params.id]);
 
-//   const candidate_master_id = 
+  //   const candidate_master_id =
 
   const formikScheduleInterviewForm = useFormik({
     initialValues: {
@@ -74,11 +74,16 @@ const EditScheduledInterview = ({
       date: Yup.string().required("Date is required"),
       location_link: Yup.string().required("Location or link is required"),
     }),
-    onSubmit: async(values) => {
+    onSubmit: async (values) => {
       setIsLoading(true);
       try {
-        if(candidate_id){
-          await dispatchUpdateInterview({ ...values, candidate_master_id: candidate_id }, params.id, navigate, candidate_id);
+        if (candidate_id) {
+          await dispatchUpdateInterview(
+            { ...values, candidate_master_id: candidate_id },
+            params.id,
+            navigate,
+            candidate_id
+          );
         }
       } catch (error) {
       } finally {
@@ -124,6 +129,10 @@ const EditScheduledInterview = ({
           {!getInterviewByInterviewIdLoading &&
             getInterviewByInterviewIdResponse && (
               <div className="card-body">
+                <div className="head3 d-flex justify-content-center">
+                  <span className="global-rular">Edit Interview</span>
+                </div>
+
                 <div className="col-lg-8 ">
                   <label className="col-form-label fw-bold fs-6 mt-2">
                     Interview Type
@@ -264,8 +273,10 @@ const mapStatetoProps = (state) => {
   return {
     getInterviewByInterviewIdLoading: state.viewInterviewByIdReducer.loading,
     getInterviewByInterviewIdResponse: state.viewInterviewByIdReducer.data,
-    candidate_id: state.viewInterviewByIdReducer?.data?.candidate ? state.viewInterviewByIdReducer?.data?.candidate[0].id: undefined,
-    
+    candidate_id: state.viewInterviewByIdReducer?.data?.candidate
+      ? state.viewInterviewByIdReducer?.data?.candidate[0].id
+      : undefined,
+
     interviewDetailResponse: state?.getInterviewsByIdReducer?.InterviewsDetials,
     interviewTypeListResponse:
       state?.getActiveInterviewTypeReducer?.interviewTypesList,
@@ -277,7 +288,8 @@ const mapStatetoProps = (state) => {
 
 const mapDispatchtoProps = {
   dispatchgetInterviewByInterview: (id) => getInterviewByInterviewId(id),
-  dispatchUpdateInterview: (data, id, callback, candidate_id) => updateInterviewById(data, id, callback, candidate_id),
+  dispatchUpdateInterview: (data, id, callback, candidate_id) =>
+    updateInterviewById(data, id, callback, candidate_id),
 
   getInterviewByIdAction: (id) => getInterviewById(id),
   getActiveInterviewTypeAction: () => getActiveInterviewType(),

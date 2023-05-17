@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Modal from "react-modal";
 import { connect } from "react-redux";
 import { Formik, useFormik } from "formik";
@@ -17,6 +17,8 @@ import {
   updateCandidateDetails,
 } from "../../Redux/Actions/Actions";
 import { addCandidate } from "../../ReduxNew/Candidate/candidateAction";
+import { getFileExtension } from "../../helper";
+import { activeDegreeAction } from "../../ReduxNew/Masters/degree/degreeAction";
 
 function CandidateDetailsComponent({
   candidateDetialsProp,
@@ -36,15 +38,24 @@ function CandidateDetailsComponent({
   getActiveRecruitmentStatusAction,
   addCandidateDispatch,
   addCandidateLoading,
+  dispatchActiveDegree,
+  activeDegreeLoading,
+  activeDegreeResponse,
 }) {
   const [skillDataModel, setSkillDataModel] = useState(false);
   const [previsCompaniesModel, setPrevisCompaniesModel] = useState(false);
   const [skillList, setskillList] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [file, setFile] = useState();
+  const [isModalDirty, setIsModalDirty] = useState(false);
+  const [previousFile, setPreviousFile] = useState(null);
+  
+
+
   const { id } = useParams();
   const params = useParams();
   const navigate = useNavigate();
+  const fileRef = useRef();
 
   const initialValues = {
     name: "",
@@ -80,6 +91,7 @@ function CandidateDetailsComponent({
     getActiveRecruitmentStatusAction();
     getActiveModeOfWorkStatusAction();
     getActiveDegreeAction();
+    dispatchActiveDegree();
   }, []);
 
   useEffect(() => {
@@ -130,15 +142,22 @@ function CandidateDetailsComponent({
         .required("Expected Salary is required"),
       source_id: Yup.string().required("Source is required"),
       resume_id: Yup.mixed()
-      .required("Please select a resume file"),
+        .test("fileType", "Invalid file format", (value) => {
+          return (
+            value &&
+            ["jpg", "jpeg", "doc", "pdf", "docx"].includes(
+              getFileExtension(value)
+            )
+          );
+        })
+        .required("Resume is required"),
     }),
-    
+
     onSubmit: (values, { resetForm }) => {
       setIsLoading(true);
       if (values?.id) {
         updateCandidateDetailsAction({ ...values, resume_id: file });
       } else {
-        // addNewCandidateAction({ ...values, resume_id: file });
         addCandidateDispatch({ ...values, resume_id: file }, navigate);
       }
       setIsLoading(false);
@@ -160,15 +179,45 @@ function CandidateDetailsComponent({
     }),
     onSubmit: (values, { resetForm }) => {
       formikSkillForm.values.skill = skillList.find(
-        (skl) => skl.id == values.skill_master_id
-      ).skill;
+        (skl) => Number(skl.id) === Number(values.skill_master_id)
+        )?.skill;
+        
+        const skillValues = formikForm.values.skills;
+        const skillIndex = formikSkillForm.values.index 
 
-      formikForm.setFieldValue("skills", [
-        ...formikForm.values.skills,
-        formikSkillForm.values,
-      ]);
+        const skill=skillValues.find((skl)=>{
+          return skl.skill === formikSkillForm.values.skill
+        });
+        const isValid= (skillIndex>=0) ? true : skill ? false : true;
+
+        
+        let newSkillList;
+
+        if(!isValid){
+          alert('already added!')
+          return;
+        }
+
+      if(skillIndex>=0){
+         newSkillList=skillValues.map((skl,index) =>{ 
+          if(index === skillIndex){
+            delete formikSkillForm.values.index
+             return formikSkillForm.values
+          }else{
+            return skl;
+          }
+        });
+      }else{  
+          newSkillList=[
+            ...formikForm.values.skills,
+            formikSkillForm.values
+          ]
+      }
+
+      formikForm.setFieldValue("skills",newSkillList);
       setSkillDataModel(false);
       resetForm();
+
     },
   });
 
@@ -186,10 +235,36 @@ function CandidateDetailsComponent({
       }),
     }),
     onSubmit: (values, { resetForm }) => {
-      formikForm.setFieldValue("previs_companies", [
-        ...formikForm.values.previs_companies,
-        values,
-      ]);
+
+      const companyList = formikForm.values.previs_companies;
+      const companyIndex = formikPrevisCompaniesForm.values.index
+      const company=companyList.find((skl)=>{
+        return skl.coumpany_name === formikPrevisCompaniesForm.values.coumpany_name
+      });
+
+      const isValid= (companyIndex>=0) ? true : company ? false : true;
+
+      if(!isValid){
+        alert('already added!')
+        return;
+      }
+
+      let newCompanyList;
+      if(companyIndex>=0){
+        newCompanyList=companyList.map((skl,index) =>{ 
+          if(index === companyIndex){
+             return formikPrevisCompaniesForm.values
+          }else{
+            return skl;
+          }
+        });
+      }else{
+        newCompanyList=[
+          ...formikForm.values.previs_companies,
+          formikPrevisCompaniesForm.values,
+        ]
+      }
+      formikForm.setFieldValue("previs_companies", newCompanyList);
       setPrevisCompaniesModel(false);
       resetForm();
     },
@@ -206,7 +281,6 @@ function CandidateDetailsComponent({
       marginRight: "-50%",
     },
   };
-
   const removeSkill = (skill) => {
     let tempList = formikForm.values.skills;
     tempList.splice(
@@ -214,6 +288,33 @@ function CandidateDetailsComponent({
       1
     );
     formikForm.setFieldValue("skills", tempList);
+  };
+  const editSkill = (skill, index) => {
+    if(isModalDirty){
+      removeSkill(skill);
+    }
+    if (skill) {
+      formikSkillForm.setValues({
+        skill_master_id: skill.skill_master_id.toString(),
+        skill: skill.skill,
+        experience: skill.experience,
+        self_rating: skill.self_rating.toString(),
+        index:index
+      });
+      setSkillDataModel(true);
+    }
+  };
+  const editCompany = (company, index) => {
+    console.log(company)
+    if (company) {
+      formikPrevisCompaniesForm.setValues({
+        coumpany_name: company.coumpany_name,
+        from: company.from,
+        to: company.to,
+        index: index,
+      });
+      setPrevisCompaniesModel(true);
+    }
   };
 
   const removeCompany = (company) => {
@@ -224,6 +325,7 @@ function CandidateDetailsComponent({
     );
     formikForm.setFieldValue("previs_companies", tempList);
   };
+
 
   return (
     <>
@@ -303,40 +405,57 @@ function CandidateDetailsComponent({
                               className="font-weight-normal mt-2 h6"
                             >
                               Resume<span className="text-red">* </span>
-                              <br />
+                              {/* <br /> */}
                               <span className="text1">
                                 (Supported Formats: PDF/DOC/JPG )
                               </span>
                             </label>
-
                             <input
+                              ref={fileRef}
                               id="resume_id"
                               name="resume_id"
                               type="file"
-                              accept="application/pdf, application/vnd.ms-excel"
-                              className={"form-control p-1 "}
+                              accept="application/pdf"
+                              className={"form-control p-1 d-none"}
                               onChange={(event) => {
-                                formikForm.setFieldValue(
-                                  "resume_id",
-                                  event.target.files[0].name
-                                );
-                                setFile(event.target.files[0]);
+                                if (event.target.files[0]) {
+                                  formikForm.setFieldValue(
+                                    "resume_id",
+                                    event.target.files[0]?.name
+                                  );
+                                  setPreviousFile(event.target.files[0]?.name);
+                                  setFile(event.target.files[0]);
+                                }
                               }}
-                              // onChange={formikForm.handleChange}
                               onBlur={formikForm.handleBlur}
-                              // value={formikForm.values.resume_id}
                             />
-                            {params.id && (
-                              <div className="d-flex justify-content-end">
-                                <Link
-                                  to={formikForm.values.resume_id}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                >
-                                  View Resume
-                                </Link>
+                            <div className="d-flex justify-content-center flex-column">
+                              <button
+                                type="button"
+                                className="btn btn-info"
+                                onClick={() => {
+                                  fileRef.current?.click();
+                                }}
+                              >
+                                <i className="fa fa-upload"></i> Upload File
+                              </button>
+                              <div className="d-flex justify-content-center">
+                                <span className="text2">{file?.name}</span>
                               </div>
-                            )}
+                            </div>
+                            {params.id &&
+                              formikForm.values?.resume_id ===
+                                candidateDetialsProp?.resume_id && (
+                                <div className="d-flex justify-content-end">
+                                  <Link
+                                    to={formikForm.values.resume_id}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    View Resume
+                                  </Link>
+                                </div>
+                              )}
 
                             {formikForm.touched.resume_id &&
                             formikForm.errors.resume_id ? (
@@ -383,7 +502,10 @@ function CandidateDetailsComponent({
                             <button
                               type="button"
                               className="btn btn-light btn-sm col-2"
-                              onClick={() => setSkillDataModel(true)}
+                              onClick={() => {
+                                setSkillDataModel(true);
+                                // formikForm.resetForm();
+                              }}
                             >
                               Add
                             </button>
@@ -406,24 +528,44 @@ function CandidateDetailsComponent({
                                     {formikForm.errors.skills}
                                   </span>
                                 ) : null}
-                                {formikForm.values?.skills?.map((skill) => {
-                                  return (
-                                    <tr>
-                                      <th>{skill.skill || skill.skill_id}</th>
-                                      <th>{skill.experience}</th>
-                                      <th>{skill.self_rating}</th>
-                                      <th className="btn-group">
-                                        <button
+                                {formikForm.values?.skills?.map(
+                                  (skill, index) => {
+                                    return (
+                                      <tr>
+                                        <th>{skill.skill || skill.skill_id}</th>
+                                        <th>{skill.experience}</th>
+                                        <th>{skill.self_rating}</th>
+                                        <th className="btn-group">
+                                          {/* <button
                                           type="button"
-                                          className="btn btn-sm bg-gradient-danger "
-                                          onClick={() => removeSkill(skill)}
+                                          className="btn btn-sm bg-gradient-info"
+                                          onClick={() => editSkill(skill)}
                                         >
-                                          Remove{" "}
-                                        </button>
-                                      </th>
-                                    </tr>
-                                  );
-                                })}
+                                          Edit{" "}
+                                        </button> */}
+                                          <button
+                                            type="button"
+                                            className="btn btn-sm bg-gradient-info"
+                                            onClick={() =>
+                                              editSkill(skill, index)
+                                            }
+                                          >
+                                            Edit
+                                          </button>
+                                        </th>
+                                        <th className="btn-group">
+                                          <button
+                                            type="button"
+                                            className="btn btn-sm bg-gradient-danger "
+                                            onClick={() => removeSkill(skill)}
+                                          >
+                                            Remove{" "}
+                                          </button>
+                                        </th>
+                                      </tr>
+                                    );
+                                  }
+                                )}
                               </tbody>
                             </table>
                           </div>
@@ -561,22 +703,6 @@ function CandidateDetailsComponent({
                                   ) : null}
                                 </div>
                               </div>
-                              {/* <div className="col-6">
-                                                                <label htmlFor="countary" className="font-weight-normal mt-2 h6">Country</label>
-                                                                <div className="">
-                                                                    <input
-                                                                        id="countary"
-                                                                        name="countary"
-                                                                        type="text"
-                                                                        className={"form-control "} onChange={formikForm.handleChange}
-                                                                        onBlur={formikForm.handleBlur}
-                                                                        value={formikForm.values.countary}
-                                                                    />
-                                                                    {formikForm.touched.countary && formikForm.errors.countary ? (
-                                                                        <span className="text-danger small">{formikForm.errors.countary}</span>
-                                                                    ) : null}
-                                                                </div>
-                                                            </div> */}
                             </div>
                           </div>
                         </div>
@@ -609,13 +735,22 @@ function CandidateDetailsComponent({
                               </thead>
                               <tbody>
                                 {formikForm.values?.previs_companies?.map(
-                                  (coumpany) => {
+                                  (coumpany, index) => {
                                     return (
                                       <tr>
                                         <td>{coumpany.coumpany_name}</td>
                                         <td>{coumpany.from}</td>
                                         <td>{coumpany.to}</td>
                                         <td>
+                                          <button
+                                            type="button"
+                                            className="btn btn-info btn-sm "
+                                            onClick={() =>
+                                              editCompany(coumpany, index)
+                                            }
+                                          >
+                                            Edit
+                                          </button>
                                           <button
                                             type="button"
                                             className="btn btn-danger btn-sm "
@@ -667,21 +802,25 @@ function CandidateDetailsComponent({
                                 }}
                                 onBlur={formikForm.handleBlur}
                               >
-                                <option disabled selected="selected">
+                                <option disabled selected>
                                   Select{" "}
                                 </option>
-                                {degreeListProp?.map((degree) => (
-                                  <option
-                                    value={degree.id}
-                                    selected={
-                                      formikForm?.values?.degree_id == degree.id
-                                        ? true
-                                        : false
-                                    }
-                                  >
-                                    {degree.degree}{" "}
-                                  </option>
-                                ))}
+                                {!activeDegreeLoading &&
+                                  activeDegreeResponse &&
+                                  activeDegreeResponse.length > 0 &&
+                                  activeDegreeResponse?.map((degree) => (
+                                    <option
+                                      value={degree.id}
+                                      selected={
+                                        formikForm?.values?.degree_id ==
+                                        degree.id
+                                          ? true
+                                          : false
+                                      }
+                                    >
+                                      {degree.degree}{" "}
+                                    </option>
+                                  ))}
                               </select>
                               {formikForm.touched.degree_id &&
                               formikForm.errors.degree_id ? (
@@ -880,7 +1019,7 @@ function CandidateDetailsComponent({
                               }}
                               onBlur={formikForm.handleBlur}
                             >
-                              <option disabled selected="selected">
+                              <option disabled selected>
                                 Select{" "}
                               </option>
                               {modeOfWorkListProp?.map((mode) => (
@@ -931,7 +1070,7 @@ function CandidateDetailsComponent({
                               }}
                               onBlur={formikForm.handleBlur}
                             >
-                              <option disabled selected="selected">
+                              <option disabled selected>
                                 Select{" "}
                               </option>
                               {sourceListProp?.map((source) => {
@@ -982,9 +1121,7 @@ function CandidateDetailsComponent({
                               }}
                               onBlur={formikForm.handleBlur}
                             >
-                              <option disabled selected="selected">
-                                Select{" "}
-                              </option>
+                              <option disabled>Select </option>
                               {recruitmentStatusListProps?.map((status) => {
                                 return (
                                   <option
@@ -1074,7 +1211,8 @@ function CandidateDetailsComponent({
                 <div className="modal-body">
                   <div className="form-group row">
                     <label className="col-3 col-form-label">Skill </label>
-                    <div className="col-9">
+                    <div className="col-9">{
+                    
                       <select
                         id="skill_master_id"
                         className={
@@ -1092,6 +1230,7 @@ function CandidateDetailsComponent({
                           Select{" "}
                         </option>
                         {skillList?.map((skill) => (
+                          // Number(skill.id) !==  Number(formikSkillForm?.values?.skill_master_id) ?
                           <option
                             value={skill.id}
                             selected={
@@ -1102,9 +1241,11 @@ function CandidateDetailsComponent({
                             }
                           >
                             {skill.skill}{" "}
-                          </option>
+                          </option> 
+                          // : <></>
                         ))}
                       </select>
+                    }
                       {formikSkillForm.touched.skill_master_id &&
                       formikSkillForm.errors.skill_master_id ? (
                         <span className="text-danger">
@@ -1195,6 +1336,146 @@ function CandidateDetailsComponent({
             )}
           </Formik>
         </Modal>
+        {/* <Modal
+          // isOpen={skillDataModel}
+          // style={customStyles}
+          // contentLabel="Example Modal"
+          isOpen={skillDataModel}
+          onClose={() => setSkillDataModel(false)}
+          formik={formikSkillFormik}
+          skillList={skillList}
+          selectedSkill={selectedSkill}
+          style={customStyles}
+        >
+          <div className="modal-header">
+            <h4>Skill Details</h4>
+            <button
+              className="btn btn-danger btn-sm"
+              onClick={() => {
+                setSkillDataModel(false);
+              }}
+            >
+              X
+            </button>
+          </div>
+          <form onSubmit={formikSkillForm.handleSubmit}>
+            <div className="modal-body">
+              <div className="form-group row">
+                <label className="col-3 col-form-label">Skill</label>
+                <div className="col-9">
+                  <select
+                    id="skill_master_id"
+                    className={
+                      "form-control " +
+                      (formikSkillForm?.errors?.skill_master_id
+                        ? " border-danger "
+                        : "") +
+                      " "
+                    }
+                    name="skill_master_id"
+                    onChange={formikSkillForm.handleChange}
+                    onBlur={formikSkillForm.handleBlur}
+                  >
+                    <option disabled selected="selected">
+                      Select
+                    </option>
+                    {skillList?.map((skill) => (
+                      <option
+                        key={skill.id}
+                        value={skill.id}
+                        selected={
+                          formikSkillForm?.values?.skill_master_id == skill.id
+                        }
+                      >
+                        {skill.skill}
+                      </option>
+                    ))}
+                  </select>
+                  {formikSkillForm.touched.skill_master_id &&
+                  formikSkillForm.errors.skill_master_id ? (
+                    <span className="text-danger">
+                      {formikSkillForm.errors.skill_master_id}
+                    </span>
+                  ) : null}
+                </div>
+              </div>
+              <div className="form-group row">
+                <label htmlFor="experience" className="col-sm-3 col-form-label">
+                  Experience
+                </label>
+                <div className="col-sm-9">
+                  <input
+                    id="experience"
+                    name="experience"
+                    type="number"
+                    className={
+                      "form-control " +
+                      (formikSkillForm?.errors.experience
+                        ? " border-danger "
+                        : "") +
+                      " "
+                    }
+                    onChange={formikSkillForm.handleChange}
+                    onBlur={formikSkillForm.handleBlur}
+                    value={formikSkillForm.values.experience}
+                  />
+                  {formikSkillForm.touched.experience ||
+                  formikSkillForm.errors.experience ? (
+                    <span className="text-danger">
+                      {formikSkillForm.errors.experience}
+                    </span>
+                  ) : null}
+                </div>
+              </div>
+              <div className="form-group row">
+                <label
+                  htmlFor="self_rating"
+                  className="col-sm-3 col-form-label"
+                >
+                  Ratings
+                </label>
+                <div className="col-sm-9">
+                  <input
+                    id="self_rating"
+                    name="self_rating"
+                    type="self_rating"
+                    className={
+                      "form-control " +
+                      (formikSkillForm?.errors.self_rating
+                        ? " border-danger "
+                        : "") +
+                      " "
+                    }
+                    onChange={formikSkillForm.handleChange}
+                    onBlur={formikSkillForm.handleBlur}
+                    value={formikSkillForm.values.self_rating}
+                  />
+                  {formikSkillForm.touched.self_rating ||
+                  formikSkillForm.errors.self_rating ? (
+                    <span className="text-danger">
+                      {formikSkillForm.errors.self_rating}
+                    </span>
+                  ) : null}
+                </div>
+              </div>
+            </div>
+            <div className="modal-footer justify-content-between">
+              <button
+                type="button"
+                className="btn btn-default"
+                data-dismiss="modal"
+                onClick={() => {
+                  setSkillDataModel(false);
+                }}
+              >
+                Close
+              </button>
+              <button type="submit" className="btn btn-primary">
+                Save
+              </button>
+            </div>
+          </form>
+        </Modal> */}
       </div>
       <div>
         <Modal
@@ -1343,6 +1624,9 @@ const mapStatetoProps = (state) => {
     addCandidateLoading: state.addCandidateReducer.loading,
     addCandidateResponse: state.addCandidateReducer.data,
 
+    activeDegreeLoading: state.activeDegreeReducer.loading,
+    activeDegreeResponse: state.activeDegreeReducer.data,
+
     sourceListProp: state.getActiveSourceReducer?.sourceList,
     degreeListProp: state?.getActiveDegreeReducer?.DegreeList,
     skillListProp: state?.getActiveSkillReducer?.skillsList,
@@ -1356,6 +1640,8 @@ const mapStatetoProps = (state) => {
 };
 
 const mapDispatchtoProps = {
+  dispatchActiveDegree: () => activeDegreeAction(),
+
   getActiveSkillAction: () => getActiveSkill(),
   getActiveSourceAction: () => getActiveSource(),
   getCandidateByIdAction: (id) => getCandidateById(id),

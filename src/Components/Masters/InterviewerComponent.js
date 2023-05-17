@@ -14,6 +14,7 @@ import {
 import DataTable from "../DataTable";
 import SidebarComponent from "../SidebarComponent";
 import NevbarComponent from "../NevbarComponent";
+import { addInterviewerAction } from "../../ReduxNew/Masters/Interviewer/interviewerAction";
 
 function InterviewerComponent({
   interviewerListProp,
@@ -21,10 +22,11 @@ function InterviewerComponent({
   interviewerUpdatedProp,
   interviewerRemovedProp,
   getAllInterviewerAction,
-  addNewInterviewerAction,
+  // addNewInterviewerAction,
   updateInterviewerDetailsAction,
   removeInterviewerStatusAction,
-  interviewerLoading
+  interviewerLoading,
+  dispatchAddInterviewer
 }) {
   const searchRef = useRef("");
   const [interviewerList, setInterviewerList] = useState(null);
@@ -77,10 +79,11 @@ function InterviewerComponent({
       if (values?.id) {
         updateInterviewerDetailsAction(values);
       } else {
-        addNewInterviewerAction(values);
+        // addNewInterviewerAction(values);
+        dispatchAddInterviewer(values, setIsModelOpen)
       }
-      resetForm();
-      setIsModelOpen(false);
+      // resetForm();
+      // setIsModelOpen(false);
     },
   });
 
@@ -380,6 +383,8 @@ function InterviewerComponent({
 
 const mapStatetoProps = (state) => {
   return {
+
+
     interviewerLoading: state.getAllInterviewerReducer.Loading,
     interviewerListProp: state?.getAllInterviewerReducer?.interviewerList,
     newinterviewerAddedProp: state?.addInterviewerReducer?.newinterviewerAdded,
@@ -390,6 +395,7 @@ const mapStatetoProps = (state) => {
 };
 
 const mapDispatchtoProps = {
+dispatchAddInterviewer: (data, setIsModelOpen) => addInterviewerAction(data, setIsModelOpen),
   getAllInterviewerAction: () => getAllInterviewer(),
   addNewInterviewerAction: (details) => addNewInterviewer(details),
   updateInterviewerDetailsAction: (details) =>

@@ -15,6 +15,7 @@ import {
   updateInterviewDetails,
 } from "../../Redux/Actions/Actions";
 import { addInterviewAction } from "../../ReduxNew/Interview/interviewAction";
+import { activeInterviewModes } from "../../ReduxNew/Masters/InterviewMode/interviewModeAction";
 
 function InterviewDetailsComponent({
   interviewsDetialsProp,
@@ -29,6 +30,9 @@ function InterviewDetailsComponent({
   addInterviewDispatch,
   updateInterviewDetailsAction,
   getInterviewByInterviewIdResponse,
+  dispatchActiveInterviewModes,
+  activeInterviewModeLoading, 
+  activeInterviewModeResponse
 }) {
   const { id } = useParams();
   const navigate = useNavigate()
@@ -42,13 +46,13 @@ function InterviewDetailsComponent({
     getActiveInterviewTypeAction();
     getActiveInterviewerAction();
     getAllInterviewModeAction();
+    dispatchActiveInterviewModes();
     
   }, [newInterviewsProp]);
 
   const handleEditInterview = (id) => {
     navigate(`/interview/edit/${id}`)
   }
-
   const formikScheduleInterviewForm = useFormik({
     initialValues: {
       interview_type_id: "",
@@ -91,7 +95,6 @@ function InterviewDetailsComponent({
       }
     }
   });
-
   return (
     <>
       <NevbarComponent
@@ -130,6 +133,7 @@ function InterviewDetailsComponent({
                       </label>
                     </div>
                     <div className="">
+                      {interviewsDetialsProp?.candidate[0]?.resume_id && 
                       <a
                         href={interviewsDetialsProp?.candidate[0]?.resume_id}
                         className="btn btn-primary "
@@ -138,6 +142,7 @@ function InterviewDetailsComponent({
                         {" "}
                         Resume{" "}
                       </a>
+                      }
                     </div>
                   </div>
                   <div className="">
@@ -333,7 +338,7 @@ function InterviewDetailsComponent({
                                     <option selected="selected">
                                       Select{" "}
                                     </option>
-                                    {interviewModeListProp?.map((mode) => (
+                                    {!activeInterviewModeLoading && activeInterviewModeResponse &&  activeInterviewModeResponse?.map((mode) => (
                                       <option
                                         key={mode.id}
                                         value={mode.id}
@@ -468,7 +473,7 @@ function InterviewDetailsComponent({
               )}
               <div className="card">
                 <div className="card-header bg-secondary">
-                  <h3 className="card-title col-10">Interviewers</h3>
+                  <h3 className="card-title col-10">Interviews</h3>
                 </div>
                 <div className="card-body">
                   <table className="table">
@@ -544,16 +549,21 @@ function InterviewDetailsComponent({
 
 const mapStatetoProps = (state) => {
   return {
+    activeInterviewModeLoading: state.activeInterviewModeReducer.loading,
+    activeInterviewModeResponse: state.activeInterviewModeReducer.data,
+
     interviewsDetialsProp: state?.getInterviewsByIdReducer?.InterviewsDetials,
     interviewTypesListProp:
       state?.getActiveInterviewTypeReducer?.interviewTypesList,
     interviewerListProp: state?.getActiveInterviewerReducer?.interviewerList,
     interviewModeListProp: state?.getAllInterviewModeReducer?.interviewModeList,
     newInterviewsProp: state?.addInterviewsReducer?.newInterviews,
+    
   };
 };
 
 const mapDispatchtoProps = {
+dispatchActiveInterviewModes: ()=> activeInterviewModes(),
   getInterviewByIdAction: (id) => getInterviewById(id),
   getActiveInterviewTypeAction: () => getActiveInterviewType(),
   getActiveInterviewerAction: () => getActiveInterviewer(),
